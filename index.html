@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com;
+        connect-src 'self' https://text.pollinations.ai;
+        frame-src 'self' https://www.youtube.com https://trytako.com;
+        child-src 'self';
+        manifest-src 'self';
+        worker-src 'self';
+        upgrade-insecure-requests;
+        block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makedown</title>
+    <link rel="icon" type="image/x-icon" href="icon.png">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .top-header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            gap: 20px;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-shrink: 0;
+        }
+        
+        .app-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+        
+        .app-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .mode-toggle {
+            display: flex;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .mode-btn {
+            padding: 6px 12px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .mode-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            min-width: 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .ai-section {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: #f8fafc;
+            width: 100%;
+        }
+        
+        .ai-input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .ai-input::placeholder {
+            color: #9ca3af;
+        }
+        
+        .header-right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        
+        .btn-divider {
+            width: 1px;
+            height: 24px;
+            background: #e2e8f0;
+            margin: 0 4px;
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            text-align: center;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            background: white;
+            color: #374151;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            font-weight: 500;
+            white-space: nowrap;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: #2563eb;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+        
+        .btn-danger:hover:not(:disabled) {
+            background: #dc2626;
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+        
+        .btn-success:hover:not(:disabled) {
+            background: #059669;
+        }
+        
+        .btn-ai {
+            background: #8b5cf6;
+            color: white;
+            border-color: #8b5cf6;
+        }
+        
+        .btn-ai:hover:not(:disabled) {
+            background: #7c3aed;
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            border-color: #6b7280;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #4b5563;
+        }
+        
+        .btn-github {
+            background: #24292e;
+            color: white;
+            border-color: #24292e;
+            gap: 6px;
+        }
+        
+        .btn-github:hover:not(:disabled) {
+            background: #1b1f23;
+        }
+        
+        .github-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        
+        .slides-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+        
+        .slide-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            position: relative;
+            user-select: none;
+        }
+        
+        .slide-item:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 1px 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .slide-item.active {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            box-shadow: 0 1px 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .slide-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+            z-index: 1000;
+        }
+        
+        .slide-item.drag-over {
+            border-color: #10b981;
+            background: #ecfdf5;
+            transform: translateY(-2px);
+        }
+        
+        .drag-handle {
+            position: absolute;
+            top: 50%;
+            left: 8px;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 16px;
+            background: #d1d5db;
+            border-radius: 2px;
+            cursor: grab;
+        }
+        
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        
+        .slide-item:hover .drag-handle {
+            background: #6b7280;
+        }
+        
+        .slide-number {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-weight: 500;
+            margin-left: 16px;
+        }
+        
+        .slide-preview {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.4;
+            max-height: 60px;
+            overflow: hidden;
+            margin-left: 16px;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .content-area {
+            flex: 1;
+            display: flex;
+            background: white;
+        }
+        
+        .editor-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .editor {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 20px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            background: #fafafa;
+        }
+        
+        .preview-panel {
+            flex: 1;
+            border-left: 1px solid #e2e8f0;
+            background: white;
+            position: relative;
+        }
+        
+        .slide-preview-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        
+        .slide-content {
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 40px;
+            overflow: auto;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .slide-content h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            color: #1e293b;
+            font-weight: 700;
+        }
+        
+        .slide-content h2 {
+            font-size: 2em;
+            margin-bottom: 0.5em;
+            color: #374151;
+            font-weight: 600;
+        }
+        
+        .slide-content h3 {
+            font-size: 1.5em;
+            margin-bottom: 0.5em;
+            color: #4b5563;
+            font-weight: 600;
+        }
+        
+        .slide-content p {
+            margin-bottom: 1em;
+            line-height: 1.6;
+            color: #374151;
+        }
+        
+        .slide-content ul, .slide-content ol {
+            margin-bottom: 1em;
+            padding-left: 2em;
+        }
+        
+        .slide-content li {
+            margin-bottom: 0.5em;
+            line-height: 1.6;
+        }
+        
+        .slide-content code {
+            background: #f1f5f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9em;
+        }
+        
+        .slide-content pre {
+            background: #f1f5f9;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1em;
+        }
+        
+        .presentation-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: black;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .presentation-slide {
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 16/9;
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            overflow: auto;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .presentation-slide h1 {
+            font-size: 3em;
+            margin-bottom: 0.5em;
+            color: #1e293b;
+            font-weight: 700;
+        }
+        
+        .presentation-slide h2 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            color: #374151;
+            font-weight: 600;
+        }
+        
+        .presentation-slide h3 {
+            font-size: 2em;
+            margin-bottom: 0.5em;
+            color: #4b5563;
+            font-weight: 600;
+        }
+        
+        .presentation-slide p {
+            margin-bottom: 1em;
+            line-height: 1.6;
+            color: #374151;
+            font-size: 1.2em;
+        }
+        
+        .presentation-slide ul, .presentation-slide ol {
+            margin-bottom: 1em;
+            padding-left: 2em;
+            font-size: 1.2em;
+        }
+        
+        .presentation-slide li {
+            margin-bottom: 0.5em;
+            line-height: 1.6;
+        }
+        
+        .presentation-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
+        
+        .presentation-controls button {
+            background: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .slide-counter {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        @media (max-width: 1400px) {
+            .header-center {
+                max-width: 600px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .top-header {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            
+            .header-center {
+                order: 3;
+                flex-basis: 100%;
+                max-width: none;
+            }
+            
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 180px;
+            }
+            
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .preview-panel {
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-left, .header-right {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            
+            .btn {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+            
+            .mode-btn {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+
+        function SlideEditor() {
+            const [slides, setSlides] = useState([
+                { id: 1, content: "# Welcome to Makedown slides\n\nThis is your first slide.\n\n- Edit markdown on the left\n- See preview on the right\n- Add more slides using the controls" }
+            ]);
+            const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+            const [mode, setMode] = useState('split'); // 'edit', 'preview', 'split'
+            const [presentationMode, setPresentationMode] = useState(false);
+            const [presentationSlideIndex, setPresentationSlideIndex] = useState(0);
+            const [isExporting, setIsExporting] = useState(false);
+            const [aiPrompt, setAiPrompt] = useState('');
+            const [isGenerating, setIsGenerating] = useState(false);
+            const [draggedSlide, setDraggedSlide] = useState(null);
+            const [dragOverSlide, setDragOverSlide] = useState(null);
+            const fileInputRef = useRef(null);
+
+            const currentSlide = slides[currentSlideIndex];
+
+            const updateSlideContent = (content) => {
+                setSlides(slides.map((slide, index) => 
+                    index === currentSlideIndex ? { ...slide, content } : slide
+                ));
+            };
+
+            const addSlide = () => {
+                const newSlide = {
+                    id: Date.now(),
+                    content: `# New Slide ${slides.length + 1}\n\nYour content here...`
+                };
+                setSlides([...slides, newSlide]);
+                setCurrentSlideIndex(slides.length);
+            };
+
+            const deleteSlide = () => {
+                if (slides.length > 1) {
+                    const newSlides = slides.filter((_, index) => index !== currentSlideIndex);
+                    setSlides(newSlides);
+                    setCurrentSlideIndex(Math.max(0, currentSlideIndex - 1));
+                }
+            };
+
+            // Drag and drop handlers
+            const handleDragStart = (e, index) => {
+                setDraggedSlide(index);
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/html', e.target.outerHTML);
+                e.target.style.opacity = '0.5';
+            };
+
+            const handleDragEnd = (e) => {
+                e.target.style.opacity = '';
+                setDraggedSlide(null);
+                setDragOverSlide(null);
+            };
+
+            const handleDragOver = (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            };
+
+            const handleDragEnter = (e, index) => {
+                e.preventDefault();
+                setDragOverSlide(index);
+            };
+
+            const handleDragLeave = (e) => {
+                if (!e.currentTarget.contains(e.relatedTarget)) {
+                    setDragOverSlide(null);
+                }
+            };
+
+            const handleDrop = (e, dropIndex) => {
+                e.preventDefault();
+                
+                if (draggedSlide === null || draggedSlide === dropIndex) {
+                    return;
+                }
+
+                const newSlides = [...slides];
+                const draggedItem = newSlides[draggedSlide];
+                
+                // Remove dragged item
+                newSlides.splice(draggedSlide, 1);
+                
+                // Insert at new position
+                const actualDropIndex = draggedSlide < dropIndex ? dropIndex - 1 : dropIndex;
+                newSlides.splice(actualDropIndex, 0, draggedItem);
+                
+                setSlides(newSlides);
+                
+                // Update current slide index if needed
+                if (currentSlideIndex === draggedSlide) {
+                    setCurrentSlideIndex(actualDropIndex);
+                } else if (currentSlideIndex > draggedSlide && currentSlideIndex <= actualDropIndex) {
+                    setCurrentSlideIndex(currentSlideIndex - 1);
+                } else if (currentSlideIndex < draggedSlide && currentSlideIndex >= actualDropIndex) {
+                    setCurrentSlideIndex(currentSlideIndex + 1);
+                }
+                
+                setDraggedSlide(null);
+                setDragOverSlide(null);
+            };
+
+            const generateWithAI = async (allSlides = false) => {
+                if (!aiPrompt.trim()) {
+                    alert('Please enter a prompt for AI generation');
+                    return;
+                }
+
+                setIsGenerating(true);
+                try {
+                    if (allSlides) {
+                        // Generate complete presentation with title and ending
+                        const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(`Create a complete presentation about: ${aiPrompt}. 
+
+Start with a title slide containing:
+- Main title with #
+- Brief subtitle or description
+- Author or date if relevant
+
+Then create 4-6 content slides covering the main points with:
+- Clear ## headings for each slide
+- Bullet points with key information
+- Relevant details and examples
+
+End with a conclusion/thank you slide containing:
+- Summary of key points
+- Call to action or next steps
+- Thank you message
+
+Format each slide in markdown and separate slides with --- (three dashes). Make it comprehensive and professional.`)}`);
+                        const textResponse = await response.text();
+                        
+                        // Split content by --- and create slides
+                        const slideContents = textResponse.split('---').map(content => content.trim()).filter(content => content);
+                        
+                        if (slideContents.length > 0) {
+                            const newSlides = slideContents.map((content, index) => ({
+                                id: Date.now() + index,
+                                content: content
+                            }));
+                            
+                            setSlides(newSlides);
+                            setCurrentSlideIndex(0);
+                        } else {
+                            // Fallback if splitting doesn't work
+                            setSlides([{
+                                id: Date.now(),
+                                content: textResponse
+                            }]);
+                            setCurrentSlideIndex(0);
+                        }
+                    } else {
+                        // Generate single slide with better context
+                        const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(`Create a professional presentation slide about: ${aiPrompt}. 
+
+Include:
+- A clear, compelling title using #
+- 3-5 bullet points with key information
+- Specific details and examples
+- Professional formatting in markdown
+
+Make it informative and visually appealing when rendered.`)}`);
+                        const textResponse = await response.text();
+                        
+                        updateSlideContent(textResponse);
+                    }
+                } catch (error) {
+                    console.error('AI generation error:', error);
+                    alert('Failed to generate content. Please try again.');
+                } finally {
+                    setIsGenerating(false);
+                }
+            };
+
+            const exportToPDF = async () => {
+                setIsExporting(true);
+                try {
+                    const { jsPDF } = window.jspdf;
+                    
+                    // Custom 16:9 format in mm (width x height)
+                    // Using 254mm x 143mm for proper 16:9 ratio
+                    const pageWidth = 254;
+                    const pageHeight = 143;
+                    
+                    const pdf = new jsPDF({
+                        orientation: 'landscape',
+                        unit: 'mm',
+                        format: [pageWidth, pageHeight]
+                    });
+                    
+                    for (let i = 0; i < slides.length; i++) {
+                        if (i > 0) pdf.addPage();
+                        
+                        // Create a temporary slide container matching the preview
+                        const tempDiv = document.createElement('div');
+                        tempDiv.style.cssText = `
+                            width: 1600px;
+                            height: 900px;
+                            background: white;
+                            padding: 60px;
+                            box-sizing: border-box;
+                            position: fixed;
+                            top: -15000px;
+                            left: -15000px;
+                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            overflow: hidden;
+                        `;
+                        
+                        tempDiv.innerHTML = marked.parse(slides[i].content);
+                        
+                        // Apply consistent styling matching the 16:9 format
+                        const h1s = tempDiv.querySelectorAll('h1');
+                        h1s.forEach(h1 => {
+                            h1.style.cssText = 'font-size: 80px; margin-bottom: 30px; color: #1e293b; font-weight: 700; line-height: 1.2;';
+                        });
+                        
+                        const h2s = tempDiv.querySelectorAll('h2');
+                        h2s.forEach(h2 => {
+                            h2.style.cssText = 'font-size: 64px; margin-bottom: 24px; color: #374151; font-weight: 600; line-height: 1.2;';
+                        });
+                        
+                        const h3s = tempDiv.querySelectorAll('h3');
+                        h3s.forEach(h3 => {
+                            h3.style.cssText = 'font-size: 48px; margin-bottom: 18px; color: #4b5563; font-weight: 600; line-height: 1.2;';
+                        });
+                        
+                        const ps = tempDiv.querySelectorAll('p');
+                        ps.forEach(p => {
+                            p.style.cssText = 'font-size: 32px; margin-bottom: 24px; line-height: 1.6; color: #374151;';
+                        });
+                        
+                        const lis = tempDiv.querySelectorAll('li');
+                        lis.forEach(li => {
+                            li.style.cssText = 'font-size: 32px; margin-bottom: 12px; line-height: 1.6; color: #374151;';
+                        });
+                        
+                        const uls = tempDiv.querySelectorAll('ul, ol');
+                        uls.forEach(ul => {
+                            ul.style.cssText = 'margin-bottom: 24px; padding-left: 60px; font-size: 32px;';
+                        });
+
+                        const codes = tempDiv.querySelectorAll('code');
+                        codes.forEach(code => {
+                            code.style.cssText = 'background: #f1f5f9; padding: 6px 12px; border-radius: 6px; font-family: Monaco, monospace; font-size: 28px;';
+                        });
+
+                        const pres = tempDiv.querySelectorAll('pre');
+                        pres.forEach(pre => {
+                            pre.style.cssText = 'background: #f1f5f9; padding: 24px; border-radius: 12px; margin-bottom: 24px; font-size: 24px; overflow: hidden;';
+                        });
+                        
+                        document.body.appendChild(tempDiv);
+                        
+                        try {
+                            const canvas = await html2canvas(tempDiv, {
+                                width: 1600,
+                                height: 900,
+                                scale: 1,
+                                useCORS: true,
+                                allowTaint: true,
+                                backgroundColor: '#ffffff'
+                            });
+                            
+                            const imgData = canvas.toDataURL('image/png', 1.0);
+                            // Add image to fill the entire 16:9 page
+                            pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
+                        } catch (error) {
+                            console.error('Error rendering slide:', error);
+                            // Fallback to text-based rendering with proper scaling
+                            pdf.setFontSize(20);
+                            pdf.text(`Slide ${i + 1}`, 20, 25);
+                            pdf.setFontSize(14);
+                            const lines = slides[i].content.split('\n');
+                            let yPos = 40;
+                            lines.forEach(line => {
+                                if (yPos < pageHeight - 20) {
+                                    const wrappedLines = pdf.splitTextToSize(line, pageWidth - 40);
+                                    pdf.text(wrappedLines, 20, yPos);
+                                    yPos += wrappedLines.length * 8;
+                                }
+                            });
+                        }
+                        
+                        document.body.removeChild(tempDiv);
+                    }
+                    
+                    pdf.save('makedown-slides-16x9.pdf');
+                } catch (error) {
+                    console.error('Error creating PDF:', error);
+                    alert('Error creating PDF. Please try again.');
+                } finally {
+                    setIsExporting(false);
+                }
+            };
+
+            const exportToJSON = () => {
+                const data = {
+                    slides: slides,
+                    metadata: {
+                        created: new Date().toISOString(),
+                        version: '1.0',
+                        title: 'Makedown'
+                    }
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'makedown-slides.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            };
+
+            const importFromJSON = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            if (data.slides && Array.isArray(data.slides)) {
+                                setSlides(data.slides);
+                                setCurrentSlideIndex(0);
+                            } else {
+                                alert('Invalid JSON format. Please select a valid slides file.');
+                            }
+                        } catch (error) {
+                            alert('Error parsing JSON file. Please check the file format.');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+                event.target.value = '';
+            };
+
+            const openGitHubRepo = () => {
+                window.open('https://github.com/aeromechanic000/makedown', '_blank');
+            };
+
+            const startPresentation = () => {
+                setPresentationMode(true);
+                setPresentationSlideIndex(currentSlideIndex);
+            };
+
+            const nextSlide = () => {
+                if (presentationSlideIndex < slides.length - 1) {
+                    setPresentationSlideIndex(presentationSlideIndex + 1);
+                }
+            };
+
+            const prevSlide = () => {
+                if (presentationSlideIndex > 0) {
+                    setPresentationSlideIndex(presentationSlideIndex - 1);
+                }
+            };
+
+            const exitPresentation = () => {
+                setPresentationMode(false);
+            };
+
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (presentationMode) {
+                        if (e.key === 'ArrowRight' || e.key === ' ') {
+                            nextSlide();
+                        } else if (e.key === 'ArrowLeft') {
+                            prevSlide();
+                        } else if (e.key === 'Escape') {
+                            exitPresentation();
+                        }
+                    }
+                };
+
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, [presentationMode, presentationSlideIndex]);
+
+            return (
+                <div className="app">
+                    {/* Top Header */}
+                    <div className="top-header">
+                        <div className="header-left">
+                            <div className="app-title">
+                                <div className="app-icon">M</div>
+                                Makedown
+                            </div>
+                            <div className="mode-toggle">
+                                <button
+                                    className={`mode-btn ${mode === 'edit' ? 'active' : ''}`}
+                                    onClick={() => setMode('edit')}
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    className={`mode-btn ${mode === 'split' ? 'active' : ''}`}
+                                    onClick={() => setMode('split')}
+                                >
+                                    Split
+                                </button>
+                                <button
+                                    className={`mode-btn ${mode === 'preview' ? 'active' : ''}`}
+                                    onClick={() => setMode('preview')}
+                                >
+                                    Preview
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div className="header-center">
+                            <div className="ai-section">
+                                <input
+                                    type="text"
+                                    className="ai-input"
+                                    placeholder="Enter detailed AI prompt to generate professional slide content..."
+                                    value={aiPrompt}
+                                    onChange={(e) => setAiPrompt(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && generateWithAI(false)}
+                                />
+                                <button 
+                                    className="btn btn-ai btn-sm" 
+                                    onClick={() => generateWithAI(false)}
+                                    disabled={isGenerating}
+                                >
+                                    {isGenerating ? 'Generating...' : 'Generate'}
+                                </button>
+                                <button 
+                                    className="btn btn-ai btn-sm" 
+                                    onClick={() => generateWithAI(true)}
+                                    disabled={isGenerating}
+                                >
+                                    Full Deck
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div className="header-right">
+                            <div className="btn-group">
+                                <button className="btn btn-primary" onClick={addSlide}>
+                                    Add Slide
+                                </button>
+                                <button 
+                                    className="btn btn-danger" 
+                                    onClick={deleteSlide} 
+                                    disabled={slides.length <= 1}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                            
+                            <div className="btn-divider"></div>
+                            
+                            <div className="btn-group">
+                                <button 
+                                    className="btn btn-secondary" 
+                                    onClick={exportToPDF}
+                                    disabled={isExporting}
+                                >
+                                    {isExporting ? 'Exporting...' : 'Export PDF'}
+                                </button>
+                                <button className="btn" onClick={exportToJSON}>
+                                    Export JSON
+                                </button>
+                                <button className="btn" onClick={() => fileInputRef.current.click()}>
+                                    Import JSON
+                                </button>
+                            </div>
+                            
+                            <div className="btn-divider"></div>
+                            
+                            <div className="btn-group">
+                                <button className="btn btn-success" onClick={startPresentation}>
+                                    Present
+                                </button>
+                                <button className="btn btn-github" onClick={openGitHubRepo}>
+                                    <svg className="github-icon" viewBox="0 0 16 16">
+                                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                                    </svg>
+                                    GitHub
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="main-container">
+                        <div className="sidebar">
+                            <div className="sidebar-header">
+                                <div className="sidebar-title">
+                                    Slides ({slides.length}) - Slide {currentSlideIndex + 1}
+                                </div>
+                            </div>
+                            
+                            <div className="slides-list">
+                                {slides.map((slide, index) => (
+                                    <div
+                                        key={slide.id}
+                                        className={`slide-item ${index === currentSlideIndex ? 'active' : ''} ${
+                                            draggedSlide === index ? 'dragging' : ''
+                                        } ${dragOverSlide === index ? 'drag-over' : ''}`}
+                                        onClick={() => setCurrentSlideIndex(index)}
+                                        draggable
+                                        onDragStart={(e) => handleDragStart(e, index)}
+                                        onDragEnd={handleDragEnd}
+                                        onDragOver={handleDragOver}
+                                        onDragEnter={(e) => handleDragEnter(e, index)}
+                                        onDragLeave={handleDragLeave}
+                                        onDrop={(e) => handleDrop(e, index)}
+                                    >
+                                        <div className="drag-handle"></div>
+                                        <div className="slide-number">Slide {index + 1}</div>
+                                        <div className="slide-preview">
+                                            {slide.content.substring(0, 100)}...
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="main-content">
+                            <div className="content-area">
+                                <div className={`editor-panel ${mode === 'preview' ? 'hidden' : ''}`}>
+                                    <textarea
+                                        className="editor"
+                                        value={currentSlide?.content || ''}
+                                        onChange={(e) => updateSlideContent(e.target.value)}
+                                        placeholder="Enter your markdown content here..."
+                                    />
+                                </div>
+
+                                <div className={`preview-panel ${mode === 'edit' ? 'hidden' : ''}`}>
+                                    <div className="slide-preview-container">
+                                        <div className="slide-content">
+                                            <div dangerouslySetInnerHTML={{
+                                                __html: marked.parse(currentSlide?.content || '')
+                                            }} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {presentationMode && (
+                        <div className="presentation-mode">
+                            <div className="presentation-slide">
+                                <div dangerouslySetInnerHTML={{
+                                    __html: marked.parse(slides[presentationSlideIndex]?.content || '')
+                                }} />
+                            </div>
+                            <div className="presentation-controls">
+                                <button onClick={prevSlide} disabled={presentationSlideIndex === 0}>
+                                    Previous
+                                </button>
+                                <span className="slide-counter">
+                                    {presentationSlideIndex + 1} / {slides.length}
+                                </span>
+                                <button onClick={nextSlide} disabled={presentationSlideIndex === slides.length - 1}>
+                                    Next
+                                </button>
+                                <button onClick={exitPresentation}>
+                                    Exit
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".json"
+                        onChange={importFromJSON}
+                        className="file-input"
+                    />
+                </div>
+            );
+        }
+
+        // Updated to use React 18's createRoot API
+        const { createRoot } = ReactDOM;
+        const container = document.getElementById('root');
+        const root = createRoot(container);
+        root.render(<SlideEditor />);
+    </script>
+
+
+
+
+</body></html>
