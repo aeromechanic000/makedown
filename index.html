@@ -20,6 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
     <style>
         * {
             margin: 0;
@@ -198,6 +199,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 4px;
         }
         
         .btn:hover {
@@ -277,10 +279,103 @@
             background: #1b1f23;
         }
         
-        .github-icon {
-            width: 16px;
-            height: 16px;
+        .btn-format {
+            background: #059669;
+            color: white;
+            border-color: #059669;
+        }
+        
+        .btn-format:hover:not(:disabled) {
+            background: #047857;
+        }
+        
+        .btn-menu {
+            background: #6b7280;
+            color: white;
+            border-color: #6b7280;
+        }
+        
+        .btn-menu:hover:not(:disabled) {
+            background: #4b5563;
+        }
+        
+        .btn-paste {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+        
+        .btn-paste:hover:not(:disabled) {
+            background: #059669;
+        }
+        
+        .github-icon, .format-icon, .menu-icon {
+            width: 14px;
+            height: 14px;
             fill: currentColor;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            z-index: 1000;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+        }
+        
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .dropdown-item:first-child {
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .dropdown-item:last-child {
+            border-radius: 0 0 6px 6px;
+        }
+        
+        .format-section {
+            border-top: 1px solid #e2e8f0;
+            margin-top: 4px;
+            padding-top: 4px;
+        }
+        
+        .color-option {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            border: 1px solid #d1d5db;
+            margin-right: 6px;
         }
         
         .slides-list {
@@ -379,6 +474,29 @@
             flex-direction: column;
         }
         
+        .editor-toolbar {
+            padding: 8px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .toolbar-group {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        
+        .toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: #d1d5db;
+            margin: 0 4px;
+        }
+        
         .editor {
             flex: 1;
             border: none;
@@ -472,6 +590,50 @@
             margin-bottom: 1em;
         }
         
+        .slide-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+        
+        .slide-content .image-layout {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+        
+        .slide-content .image-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .slide-content .image-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .slide-content .content-left {
+            flex: 1;
+            padding-right: 20px;
+        }
+        
+        .slide-content .content-right {
+            flex: 1;
+            padding-left: 20px;
+        }
+        
+        .slide-content .image-layout-full {
+            display: block;
+            margin: 20px 0;
+        }
+        
+        .slide-content .content-section {
+            margin-top: 20px;
+        }
+        
         .presentation-mode {
             position: fixed;
             top: 0;
@@ -537,6 +699,53 @@
             line-height: 1.6;
         }
         
+        .presentation-slide img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+        
+        .presentation-slide .image-layout {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            margin: 30px 0;
+        }
+        
+        .presentation-slide .image-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .presentation-slide .image-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .presentation-slide .content-left {
+            flex: 1;
+            padding-right: 30px;
+            font-size: 1.2em;
+        }
+        
+        .presentation-slide .content-right {
+            flex: 1;
+            padding-left: 30px;
+            font-size: 1.2em;
+        }
+        
+        .presentation-slide .image-layout-full {
+            display: block;
+            margin: 30px 0;
+        }
+        
+        .presentation-slide .content-section {
+            margin-top: 30px;
+            font-size: 1.2em;
+        }
+        
         .presentation-controls {
             position: absolute;
             bottom: 20px;
@@ -573,6 +782,61 @@
             display: none;
         }
         
+        .paste-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .paste-modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .paste-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .paste-modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .paste-textarea {
+            flex: 1;
+            min-height: 300px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+        }
+        
+        .paste-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        
         @media (max-width: 1400px) {
             .header-center {
                 max-width: 600px;
@@ -607,6 +871,24 @@
             .preview-panel {
                 border-left: none;
                 border-top: 1px solid #e2e8f0;
+            }
+            
+            .slide-content .image-layout {
+                flex-direction: column;
+            }
+            
+            .slide-content .content-left,
+            .slide-content .content-right {
+                padding: 0;
+            }
+            
+            .presentation-slide .image-layout {
+                flex-direction: column;
+            }
+            
+            .presentation-slide .content-left,
+            .presentation-slide .content-right {
+                padding: 0;
             }
         }
         
@@ -647,7 +929,13 @@
             const [isGenerating, setIsGenerating] = useState(false);
             const [draggedSlide, setDraggedSlide] = useState(null);
             const [dragOverSlide, setDragOverSlide] = useState(null);
+            const [showFormatDropdown, setShowFormatDropdown] = useState(false);
+            const [showMenuDropdown, setShowMenuDropdown] = useState(false);
+            const [showPasteModal, setShowPasteModal] = useState(false);
+            const [pasteContent, setPasteContent] = useState('');
+            const [uploadedImages, setUploadedImages] = useState(new Map()); // Store uploaded images
             const fileInputRef = useRef(null);
+            const editorRef = useRef(null);
 
             const currentSlide = slides[currentSlideIndex];
 
@@ -671,6 +959,325 @@
                     const newSlides = slides.filter((_, index) => index !== currentSlideIndex);
                     setSlides(newSlides);
                     setCurrentSlideIndex(Math.max(0, currentSlideIndex - 1));
+                }
+            };
+
+            // Text formatting functions
+            const getSelectedText = () => {
+                if (editorRef.current) {
+                    const start = editorRef.current.selectionStart;
+                    const end = editorRef.current.selectionEnd;
+                    return {
+                        text: editorRef.current.value.substring(start, end),
+                        start,
+                        end
+                    };
+                }
+                return { text: '', start: 0, end: 0 };
+            };
+
+            const replaceSelectedText = (newText) => {
+                if (editorRef.current) {
+                    const start = editorRef.current.selectionStart;
+                    const end = editorRef.current.selectionEnd;
+                    const content = editorRef.current.value;
+                    const newContent = content.substring(0, start) + newText + content.substring(end);
+                    updateSlideContent(newContent);
+                    
+                    // Set cursor position after replacement
+                    setTimeout(() => {
+                        editorRef.current.focus();
+                        editorRef.current.setSelectionRange(start + newText.length, start + newText.length);
+                    }, 0);
+                }
+            };
+
+            const removeFormat = (text) => {
+                // Remove bold, italic, bold-italic formatting
+                let cleaned = text;
+                cleaned = cleaned.replace(/\*\*\*(.*?)\*\*\*/g, '$1'); // Bold italic
+                cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '$1'); // Bold
+                cleaned = cleaned.replace(/\*(.*?)\*/g, '$1'); // Italic
+                cleaned = cleaned.replace(/<span style="color: [^"]*">(.*?)<\/span>/g, '$1'); // Color spans
+                return cleaned;
+            };
+
+            const formatText = (type) => {
+                const selection = getSelectedText();
+                if (!selection.text) {
+                    alert('Please select text to format');
+                    return;
+                }
+
+                let formattedText = selection.text;
+                
+                if (type === 'remove') {
+                    formattedText = removeFormat(selection.text);
+                } else {
+                    switch (type) {
+                        case 'bold':
+                            formattedText = `**${selection.text}**`;
+                            break;
+                        case 'italic':
+                            formattedText = `*${selection.text}*`;
+                            break;
+                        case 'bold-italic':
+                            formattedText = `***${selection.text}***`;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
+                replaceSelectedText(formattedText);
+                setShowFormatDropdown(false);
+            };
+
+            const formatTextWithColor = (color) => {
+                const selection = getSelectedText();
+                if (!selection.text) {
+                    alert('Please select text to format');
+                    return;
+                }
+
+                const formattedText = `<span style="color: ${color}">${selection.text}</span>`;
+                replaceSelectedText(formattedText);
+                setShowFormatDropdown(false);
+            };
+
+            // Fixed custom marked renderer to handle uploaded images
+            const renderContent = (content) => {
+                // First, replace image IDs with actual data URLs in the content
+                let processedContent = content;
+                
+                uploadedImages.forEach((dataUrl, imageId) => {
+                    // Replace the image ID references with actual data URLs
+                    const regex = new RegExp(`!\\[([^\\]]*)\\]\\(${imageId}\\)`, 'g');
+                    processedContent = processedContent.replace(regex, `![${imageId}](${dataUrl})`);
+                });
+                
+                // Parse with marked
+                const html = marked.parse(processedContent);
+                
+                return html;
+            };
+
+            // Helper function to parse markdown content for PPTX export
+            const parseMarkdownForPptx = (content) => {
+                // Replace image IDs with actual data URLs
+                let processedContent = content;
+                uploadedImages.forEach((dataUrl, imageId) => {
+                    const regex = new RegExp(`!\\[([^\\]]*)\\]\\(${imageId}\\)`, 'g');
+                    processedContent = processedContent.replace(regex, `![${imageId}](${dataUrl})`);
+                });
+
+                const lines = processedContent.split('\n');
+                const elements = [];
+                let currentElement = null;
+
+                lines.forEach(line => {
+                    line = line.trim();
+                    if (!line) return;
+
+                    // Headers
+                    if (line.startsWith('# ')) {
+                        elements.push({
+                            type: 'title',
+                            text: line.replace('# ', ''),
+                            level: 1
+                        });
+                    } else if (line.startsWith('## ')) {
+                        elements.push({
+                            type: 'title',
+                            text: line.replace('## ', ''),
+                            level: 2
+                        });
+                    } else if (line.startsWith('### ')) {
+                        elements.push({
+                            type: 'title',
+                            text: line.replace('### ', ''),
+                            level: 3
+                        });
+                    }
+                    // Bullet points
+                    else if (line.startsWith('- ') || line.startsWith('* ')) {
+                        if (!currentElement || currentElement.type !== 'bullet') {
+                            currentElement = { type: 'bullet', items: [] };
+                            elements.push(currentElement);
+                        }
+                        currentElement.items.push(line.replace(/^[*-] /, ''));
+                    }
+                    // Images
+                    else if (line.match(/!\[.*?\]\(.*?\)/)) {
+                        const match = line.match(/!\[.*?\]\((.*?)\)/);
+                        if (match) {
+                            elements.push({
+                                type: 'image',
+                                src: match[1]
+                            });
+                        }
+                    }
+                    // Regular text
+                    else if (!line.startsWith('<div') && !line.startsWith('</div>')) {
+                        // Handle bold and italic formatting
+                        let text = line;
+                        text = text.replace(/\*\*\*(.*?)\*\*\*/g, '$1'); // Bold italic
+                        text = text.replace(/\*\*(.*?)\*\*/g, '$1'); // Bold
+                        text = text.replace(/\*(.*?)\*/g, '$1'); // Italic
+                        
+                        elements.push({
+                            type: 'text',
+                            text: text
+                        });
+                        currentElement = null;
+                    }
+                });
+
+                return elements;
+            };
+
+            // Paste presentation function
+            const pastePresentation = () => {
+                if (!pasteContent.trim()) {
+                    alert('Please enter some content to paste');
+                    return;
+                }
+
+                try {
+                    // Split content by --- or by multiple line breaks to detect slides
+                    let slideContents;
+                    
+                    if (pasteContent.includes('---')) {
+                        slideContents = pasteContent.split('---').map(content => content.trim()).filter(content => content);
+                    } else {
+                        // Try to split by double line breaks followed by headers
+                        const headerRegex = /\n\n(?=# )/g;
+                        slideContents = pasteContent.split(headerRegex).map(content => content.trim()).filter(content => content);
+                        
+                        // If no clear splits found, treat as single slide
+                        if (slideContents.length <= 1) {
+                            slideContents = [pasteContent.trim()];
+                        }
+                    }
+
+                    if (slideContents.length > 0) {
+                        const newSlides = slideContents.map((content, index) => ({
+                            id: Date.now() + index,
+                            content: content
+                        }));
+                        
+                        setSlides(newSlides);
+                        setCurrentSlideIndex(0);
+                        setShowPasteModal(false);
+                        setPasteContent('');
+                    }
+                } catch (error) {
+                    alert('Error processing pasted content. Please check the format.');
+                    console.error('Paste error:', error);
+                }
+            };
+
+            // PPTX Export function
+            const exportToPPTX = async () => {
+                setIsExporting(true);
+                try {
+                    const pptx = new PptxGenJS();
+                    
+                    // Set slide size to 16:9
+                    pptx.defineLayout({ name: 'LAYOUT_16x9', width: 10, height: 5.625 });
+                    pptx.layout = 'LAYOUT_16x9';
+
+                    for (let i = 0; i < slides.length; i++) {
+                        const slide = pptx.addSlide();
+                        const elements = parseMarkdownForPptx(slides[i].content);
+                        
+                        let yPosition = 0.5;
+                        let hasTitle = false;
+
+                        elements.forEach(element => {
+                            switch (element.type) {
+                                case 'title':
+                                    let fontSize = 44;
+                                    if (element.level === 2) fontSize = 36;
+                                    if (element.level === 3) fontSize = 28;
+                                    
+                                    slide.addText(element.text, {
+                                        x: 0.5,
+                                        y: yPosition,
+                                        w: 9,
+                                        h: 0.8,
+                                        fontSize: fontSize,
+                                        bold: true,
+                                        color: element.level === 1 ? '1e293b' : '374151',
+                                        fontFace: 'Arial'
+                                    });
+                                    yPosition += element.level === 1 ? 1.0 : 0.8;
+                                    hasTitle = true;
+                                    break;
+
+                                case 'bullet':
+                                    const bulletText = element.items.map(item => `• ${item}`).join('\n');
+                                    slide.addText(bulletText, {
+                                        x: 0.5,
+                                        y: yPosition,
+                                        w: 9,
+                                        h: Math.min(element.items.length * 0.4, 3),
+                                        fontSize: 18,
+                                        color: '374151',
+                                        fontFace: 'Arial',
+                                        lineSpacing: 32
+                                    });
+                                    yPosition += Math.min(element.items.length * 0.4, 3) + 0.2;
+                                    break;
+
+                                case 'text':
+                                    if (element.text.trim()) {
+                                        slide.addText(element.text, {
+                                            x: 0.5,
+                                            y: yPosition,
+                                            w: 9,
+                                            h: 0.6,
+                                            fontSize: 16,
+                                            color: '374151',
+                                            fontFace: 'Arial'
+                                        });
+                                        yPosition += 0.7;
+                                    }
+                                    break;
+
+                                case 'image':
+                                    if (element.src.startsWith('data:image')) {
+                                        try {
+                                            // For PPTX, we need to calculate image position based on available space
+                                            const imageY = hasTitle ? 2.0 : 0.5;
+                                            const availableHeight = 5.625 - imageY - 0.5; // Total height minus used space and margin
+                                            
+                                            slide.addImage({
+                                                data: element.src,
+                                                x: 1,
+                                                y: imageY,
+                                                w: 4,
+                                                h: Math.min(3, availableHeight),
+                                                sizing: { type: 'contain', w: 4, h: Math.min(3, availableHeight) }
+                                            });
+                                        } catch (error) {
+                                            console.warn('Failed to add image to slide:', error);
+                                        }
+                                    }
+                                    break;
+                            }
+                        });
+                    }
+
+                    // Save the presentation
+                    await pptx.writeFile({ fileName: 'makedown-slides.pptx' });
+                    
+                } catch (error) {
+                    console.error('Error creating PPTX:', error);
+                    alert('Error creating PPTX file. Please try again.');
+                } finally {
+                    setIsExporting(false);
+                    setShowMenuDropdown(false);
                 }
             };
 
@@ -842,7 +1449,7 @@ Make it informative and visually appealing when rendered.`)}`);
                             overflow: hidden;
                         `;
                         
-                        tempDiv.innerHTML = marked.parse(slides[i].content);
+                        tempDiv.innerHTML = renderContent(slides[i].content);
                         
                         // Apply consistent styling matching the 16:9 format
                         const h1s = tempDiv.querySelectorAll('h1');
@@ -883,6 +1490,37 @@ Make it informative and visually appealing when rendered.`)}`);
                         const pres = tempDiv.querySelectorAll('pre');
                         pres.forEach(pre => {
                             pre.style.cssText = 'background: #f1f5f9; padding: 24px; border-radius: 12px; margin-bottom: 24px; font-size: 24px; overflow: hidden;';
+                        });
+
+                        // Style image layouts
+                        const imageLayouts = tempDiv.querySelectorAll('.image-layout');
+                        imageLayouts.forEach(layout => {
+                            layout.style.cssText = 'display: flex; gap: 30px; align-items: flex-start; margin: 30px 0;';
+                        });
+
+                        const imageLefts = tempDiv.querySelectorAll('.image-left');
+                        imageLefts.forEach(imgLeft => {
+                            imgLeft.style.cssText = 'flex: 1; display: flex; flex-direction: column;';
+                        });
+
+                        const imageRights = tempDiv.querySelectorAll('.image-right');
+                        imageRights.forEach(imgRight => {
+                            imgRight.style.cssText = 'flex: 1; display: flex; flex-direction: column;';
+                        });
+
+                        const contentLefts = tempDiv.querySelectorAll('.content-left');
+                        contentLefts.forEach(contentLeft => {
+                            contentLeft.style.cssText = 'flex: 1; padding-right: 30px; font-size: 32px;';
+                        });
+
+                        const contentRights = tempDiv.querySelectorAll('.content-right');
+                        contentRights.forEach(contentRight => {
+                            contentRight.style.cssText = 'flex: 1; padding-left: 30px; font-size: 32px;';
+                        });
+
+                        const imgs = tempDiv.querySelectorAll('img');
+                        imgs.forEach(img => {
+                            img.style.cssText = 'max-width: 100%; height: auto; border-radius: 6px;';
                         });
                         
                         document.body.appendChild(tempDiv);
@@ -926,12 +1564,14 @@ Make it informative and visually appealing when rendered.`)}`);
                     alert('Error creating PDF. Please try again.');
                 } finally {
                     setIsExporting(false);
+                    setShowMenuDropdown(false);
                 }
             };
 
             const exportToJSON = () => {
                 const data = {
                     slides: slides,
+                    uploadedImages: Array.from(uploadedImages.entries()), // Convert Map to array for JSON
                     metadata: {
                         created: new Date().toISOString(),
                         version: '1.0',
@@ -946,6 +1586,7 @@ Make it informative and visually appealing when rendered.`)}`);
                 a.download = 'makedown-slides.json';
                 a.click();
                 URL.revokeObjectURL(url);
+                setShowMenuDropdown(false);
             };
 
             const importFromJSON = (event) => {
@@ -958,6 +1599,11 @@ Make it informative and visually appealing when rendered.`)}`);
                             if (data.slides && Array.isArray(data.slides)) {
                                 setSlides(data.slides);
                                 setCurrentSlideIndex(0);
+                                
+                                // Restore uploaded images if they exist
+                                if (data.uploadedImages && Array.isArray(data.uploadedImages)) {
+                                    setUploadedImages(new Map(data.uploadedImages));
+                                }
                             } else {
                                 alert('Invalid JSON format. Please select a valid slides file.');
                             }
@@ -968,6 +1614,7 @@ Make it informative and visually appealing when rendered.`)}`);
                     reader.readAsText(file);
                 }
                 event.target.value = '';
+                setShowMenuDropdown(false);
             };
 
             const openGitHubRepo = () => {
@@ -994,6 +1641,21 @@ Make it informative and visually appealing when rendered.`)}`);
             const exitPresentation = () => {
                 setPresentationMode(false);
             };
+
+            // Close dropdown when clicking outside
+            useEffect(() => {
+                const handleClickOutside = (event) => {
+                    if (!event.target.closest('.dropdown')) {
+                        setShowFormatDropdown(false);
+                        setShowMenuDropdown(false);
+                    }
+                };
+
+                document.addEventListener('click', handleClickOutside);
+                return () => {
+                    document.removeEventListener('click', handleClickOutside);
+                };
+            }, []);
 
             useEffect(() => {
                 const handleKeyDown = (e) => {
@@ -1082,24 +1744,67 @@ Make it informative and visually appealing when rendered.`)}`);
                                 >
                                     Delete
                                 </button>
-                            </div>
-                            
-                            <div className="btn-divider"></div>
-                            
-                            <div className="btn-group">
                                 <button 
-                                    className="btn btn-secondary" 
-                                    onClick={exportToPDF}
-                                    disabled={isExporting}
+                                    className="btn btn-paste" 
+                                    onClick={() => setShowPasteModal(true)}
                                 >
-                                    {isExporting ? 'Exporting...' : 'Export PDF'}
+                                    Paste Slides
                                 </button>
-                                <button className="btn" onClick={exportToJSON}>
-                                    Export JSON
-                                </button>
-                                <button className="btn" onClick={() => fileInputRef.current.click()}>
-                                    Import JSON
-                                </button>
+                                <div className={`dropdown ${showFormatDropdown ? 'active' : ''}`}>
+                                    <button 
+                                        className="btn btn-format"
+                                        onClick={() => setShowFormatDropdown(!showFormatDropdown)}
+                                    >
+                                        <svg className="format-icon" viewBox="0 0 24 24" fill="none">
+                                            <path d="M6 4v4h10.5a2.5 2.5 0 0 1 0 5H6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            <path d="M8 15v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            <path d="M15 20h-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                        Format
+                                    </button>
+                                    <div className="dropdown-content">
+                                        <button className="dropdown-item" onClick={() => formatText('bold')}>
+                                            <strong>B</strong>
+                                            Bold
+                                        </button>
+                                        <button className="dropdown-item" onClick={() => formatText('italic')}>
+                                            <em>I</em>
+                                            Italic
+                                        </button>
+                                        <button className="dropdown-item" onClick={() => formatText('bold-italic')}>
+                                            <strong><em>BI</em></strong>
+                                            Bold Italic
+                                        </button>
+                                        <div className="format-section">
+                                            <button className="dropdown-item" onClick={() => formatTextWithColor('#ef4444')}>
+                                                <div className="color-option" style={{background: '#ef4444'}}></div>
+                                                Red
+                                            </button>
+                                            <button className="dropdown-item" onClick={() => formatTextWithColor('#3b82f6')}>
+                                                <div className="color-option" style={{background: '#3b82f6'}}></div>
+                                                Blue
+                                            </button>
+                                            <button className="dropdown-item" onClick={() => formatTextWithColor('#10b981')}>
+                                                <div className="color-option" style={{background: '#10b981'}}></div>
+                                                Green
+                                            </button>
+                                            <button className="dropdown-item" onClick={() => formatTextWithColor('#f59e0b')}>
+                                                <div className="color-option" style={{background: '#f59e0b'}}></div>
+                                                Orange
+                                            </button>
+                                            <button className="dropdown-item" onClick={() => formatTextWithColor('#8b5cf6')}>
+                                                <div className="color-option" style={{background: '#8b5cf6'}}></div>
+                                                Purple
+                                            </button>
+                                        </div>
+                                        <div className="format-section">
+                                            <button className="dropdown-item" onClick={() => formatText('remove')}>
+                                                ✂️
+                                                Remove Format
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             
                             <div className="btn-divider"></div>
@@ -1114,6 +1819,35 @@ Make it informative and visually appealing when rendered.`)}`);
                                     </svg>
                                     GitHub
                                 </button>
+                                <div className={`dropdown ${showMenuDropdown ? 'active' : ''}`}>
+                                    <button 
+                                        className="btn btn-menu"
+                                        onClick={() => setShowMenuDropdown(!showMenuDropdown)}
+                                    >
+                                        <svg className="menu-icon" viewBox="0 0 24 24" fill="none">
+                                            <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" strokeWidth="2"/>
+                                            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" strokeWidth="2"/>
+                                            <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" strokeWidth="2"/>
+                                        </svg>
+                                        Menu
+                                    </button>
+                                    <div className="dropdown-content">
+                                        <button className="dropdown-item" onClick={exportToPDF} disabled={isExporting}>
+                                            {isExporting ? 'Exporting...' : 'Export PDF'}
+                                        </button>
+                                        <button className="dropdown-item" onClick={exportToPPTX} disabled={isExporting}>
+                                            {isExporting ? 'Exporting...' : 'Export PPTX'}
+                                        </button>
+                                        <button className="dropdown-item" onClick={exportToJSON}>
+                                            Export JSON
+                                        </button>
+                                        <div className="format-section">
+                                            <button className="dropdown-item" onClick={() => fileInputRef.current.click()}>
+                                                Import JSON
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1156,6 +1890,7 @@ Make it informative and visually appealing when rendered.`)}`);
                             <div className="content-area">
                                 <div className={`editor-panel ${mode === 'preview' ? 'hidden' : ''}`}>
                                     <textarea
+                                        ref={editorRef}
                                         className="editor"
                                         value={currentSlide?.content || ''}
                                         onChange={(e) => updateSlideContent(e.target.value)}
@@ -1167,7 +1902,7 @@ Make it informative and visually appealing when rendered.`)}`);
                                     <div className="slide-preview-container">
                                         <div className="slide-content">
                                             <div dangerouslySetInnerHTML={{
-                                                __html: marked.parse(currentSlide?.content || '')
+                                                __html: renderContent(currentSlide?.content || '')
                                             }} />
                                         </div>
                                     </div>
@@ -1176,11 +1911,55 @@ Make it informative and visually appealing when rendered.`)}`);
                         </div>
                     </div>
 
+                    {/* Paste Modal */}
+                    {showPasteModal && (
+                        <div className="paste-modal">
+                            <div className="paste-modal-content">
+                                <div className="paste-modal-header">
+                                    <h3 className="paste-modal-title">Paste Presentation Content</h3>
+                                    <button 
+                                        className="btn btn-sm" 
+                                        onClick={() => {
+                                            setShowPasteModal(false);
+                                            setPasteContent('');
+                                        }}
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+                                <textarea
+                                    className="paste-textarea"
+                                    value={pasteContent}
+                                    onChange={(e) => setPasteContent(e.target.value)}
+                                    placeholder="Paste your markdown presentation content here. Separate slides with --- or use headers to auto-detect slides."
+                                />
+                                <div className="paste-actions">
+                                    <button 
+                                        className="btn" 
+                                        onClick={() => {
+                                            setShowPasteModal(false);
+                                            setPasteContent('');
+                                        }}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        className="btn btn-primary" 
+                                        onClick={pastePresentation}
+                                        disabled={!pasteContent.trim()}
+                                    >
+                                        Import Slides
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {presentationMode && (
                         <div className="presentation-mode">
                             <div className="presentation-slide">
                                 <div dangerouslySetInnerHTML={{
-                                    __html: marked.parse(slides[presentationSlideIndex]?.content || '')
+                                    __html: renderContent(slides[presentationSlideIndex]?.content || '')
                                 }} />
                             </div>
                             <div className="presentation-controls">
@@ -1217,7 +1996,6 @@ Make it informative and visually appealing when rendered.`)}`);
         const root = createRoot(container);
         root.render(<SlideEditor />);
     </script>
-
 
 
 
