@@ -2288,19 +2288,6 @@ Make it informative and visually appealing when rendered.`)}`);
                             
                             {/* Combined Navigation, Zoom, and Font Size Controls */}
                             <div className="presentation-controls">
-                                <button onClick={prevSlide} disabled={presentationSlideIndex === 0}>
-                                    Previous
-                                </button>
-                                <span className="slide-counter">
-                                    {presentationSlideIndex + 1} / {slides.length}
-                                </span>
-                                <button onClick={nextSlide} disabled={presentationSlideIndex === slides.length - 1}>
-                                    Next
-                                </button>
-                                <button onClick={exitPresentation}>
-                                    Exit
-                                </button>
-                                
                                 {/* Zoom Controls */}
                                 <div className="zoom-controls">
                                     <button 
@@ -2329,6 +2316,18 @@ Make it informative and visually appealing when rendered.`)}`);
                                     </button>
                                 </div>
 
+                                <button onClick={prevSlide} disabled={presentationSlideIndex === 0}>
+                                    Previous
+                                </button>
+                                <span className="slide-counter">
+                                    {presentationSlideIndex + 1} / {slides.length}
+                                </span>
+                                <button onClick={nextSlide} disabled={presentationSlideIndex === slides.length - 1}>
+                                    Next
+                                </button>
+                                <button onClick={exitPresentation}>
+                                    Exit
+                                </button>
                                 {/* Font Size Controls */}
                                 <div className="font-controls">
                                     <button 
