@@ -339,7 +339,7 @@
         
         .btn-zoom {
             background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: black; 
+            color: white;
             border-color: #f59e0b;
             min-width: 36px;
             height: 36px;
@@ -834,8 +834,6 @@
             cursor: pointer;
             font-size: 12px;
             font-weight: 500;
-            width: 100px;
-            height: 30px;
             transition: all 0.2s ease;
         }
         
@@ -852,7 +850,7 @@
         
         .zoom-controls {
             display: flex;
-            gap: 12px;
+            gap: 6px;
             align-items: center;
             border-left: 1px solid rgba(255, 255, 255, 0.2);
             padding-left: 12px;
@@ -1344,6 +1342,43 @@
                 } catch (error) {
                     alert('Error processing pasted content. Please check the format.');
                     console.error('Paste error:', error);
+                }
+            };
+
+            // Markdown Export function
+            const exportToMarkdown = () => {
+                try {
+                    // Create markdown content with slide separators
+                    const markdownContent = slides.map((slide, index) => {
+                        // Add slide number comment for reference
+                        const slideHeader = `<!-- Slide ${index + 1} -->\n`;
+                        return slideHeader + slide.content;
+                    }).join('\n\n---\n\n');
+
+                    // Add metadata header
+                    const metadata = `---
+title: "Makedown Presentation"
+date: "${new Date().toISOString().split('T')[0]}"
+slides: ${slides.length}
+---
+
+`;
+
+                    const fullContent = metadata + markdownContent;
+
+                    // Create and download the file
+                    const blob = new Blob([fullContent], { type: 'text/markdown;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'makedown-slides.md';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    setShowMenuDropdown(false);
+                } catch (error) {
+                    console.error('Error exporting markdown:', error);
+                    alert('Error creating markdown file. Please try again.');
                 }
             };
 
@@ -2018,6 +2053,9 @@ Make it informative and visually appealing when rendered.`)}`);
                                         </button>
                                         <button className="dropdown-item" onClick={exportToPPTX} disabled={isExporting}>
                                             {isExporting ? 'Exporting...' : 'Export PPTX'}
+                                        </button>
+                                        <button className="dropdown-item" onClick={exportToMarkdown}>
+                                            Export Markdown
                                         </button>
                                         <button className="dropdown-item" onClick={exportToJSON}>
                                             Export JSON
