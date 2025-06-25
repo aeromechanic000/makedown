@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <meta http-equiv="Content-Security-Policy" content="
+    <meta http-equiv="Content-Security-Policy" content="
         default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com;
         connect-src 'self' https://text.pollinations.ai;
         frame-src 'self' https://www.youtube.com https://trytako.com;
@@ -355,6 +355,26 @@
         .btn-zoom:hover:not(:disabled) {
             background: linear-gradient(135deg, #d97706, #b45309);
             border-color: #d97706;
+        }
+        
+        .btn-font {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            border-color: #8b5cf6;
+            min-width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .btn-font:hover:not(:disabled) {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            border-color: #7c3aed;
         }
         
         .github-icon, .format-icon, .menu-icon {
@@ -727,21 +747,18 @@
         }
         
         .presentation-slide h1 {
-            font-size: 3em;
             margin-bottom: 0.5em;
             color: #111827;
             font-weight: 700;
         }
         
         .presentation-slide h2 {
-            font-size: 2.5em;
             margin-bottom: 0.5em;
             color: #374151;
             font-weight: 600;
         }
         
         .presentation-slide h3 {
-            font-size: 2em;
             margin-bottom: 0.5em;
             color: #4b5563;
             font-weight: 600;
@@ -751,13 +768,11 @@
             margin-bottom: 1em;
             line-height: 1.6;
             color: #374151;
-            font-size: 1.2em;
         }
         
         .presentation-slide ul, .presentation-slide ol {
             margin-bottom: 1em;
             padding-left: 2em;
-            font-size: 1.2em;
         }
         
         .presentation-slide li {
@@ -793,13 +808,11 @@
         .presentation-slide .content-left {
             flex: 1;
             padding-right: 30px;
-            font-size: 1.2em;
         }
         
         .presentation-slide .content-right {
             flex: 1;
             padding-left: 30px;
-            font-size: 1.2em;
         }
         
         .presentation-slide .image-layout-full {
@@ -809,7 +822,6 @@
         
         .presentation-slide .content-section {
             margin-top: 30px;
-            font-size: 1.2em;
         }
         
         .presentation-controls {
@@ -859,7 +871,16 @@
             margin-left: 12px;
         }
         
-        .zoom-level {
+        .font-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            padding-left: 12px;
+            margin-left: 12px;
+        }
+        
+        .zoom-level, .font-level {
             color: white;
             font-size: 12px;
             font-weight: 500;
@@ -1029,31 +1050,13 @@
                 padding: 15px;
             }
             
-            .presentation-slide h1 {
-                font-size: 2em;
-            }
-            
-            .presentation-slide h2 {
-                font-size: 1.5em;
-            }
-            
-            .presentation-slide h3 {
-                font-size: 1.2em;
-            }
-            
-            .presentation-slide p,
-            .presentation-slide ul,
-            .presentation-slide ol {
-                font-size: 1em;
-            }
-            
             .presentation-controls {
                 flex-wrap: wrap;
                 gap: 8px;
                 padding: 8px 16px;
             }
             
-            .zoom-controls {
+            .zoom-controls, .font-controls {
                 border-left: none;
                 padding-left: 0;
                 margin-left: 0;
@@ -1080,7 +1083,8 @@
             const [mode, setMode] = useState('split'); // 'edit', 'preview', 'split'
             const [presentationMode, setPresentationMode] = useState(false);
             const [presentationSlideIndex, setPresentationSlideIndex] = useState(0);
-            const [zoomLevel, setZoomLevel] = useState(1); // New zoom state
+            const [zoomLevel, setZoomLevel] = useState(1); // Zoom state
+            const [fontScale, setFontScale] = useState(1); // New font scale state
             const [isExporting, setIsExporting] = useState(false);
             const [aiPrompt, setAiPrompt] = useState('');
             const [isGenerating, setIsGenerating] = useState(false);
@@ -1093,6 +1097,7 @@
             const [uploadedImages, setUploadedImages] = useState(new Map()); // Store uploaded images
             const fileInputRef = useRef(null);
             const editorRef = useRef(null);
+            const presentationSlideRef = useRef(null);
 
             const currentSlide = slides[currentSlideIndex];
 
@@ -1108,6 +1113,82 @@
             const resetZoom = () => {
                 setZoomLevel(1);
             };
+
+            // Font size functions
+            const increaseFontSize = () => {
+                setFontScale(prev => Math.min(prev + 0.1, 2.0)); // Max font scale 200%
+            };
+
+            const decreaseFontSize = () => {
+                setFontScale(prev => Math.max(prev - 0.1, 0.5)); // Min font scale 50%
+            };
+
+            const resetFontSize = () => {
+                setFontScale(1);
+            };
+
+            // Apply font scaling to presentation slide
+            useEffect(() => {
+                if (presentationSlideRef.current && presentationMode) {
+                    const slide = presentationSlideRef.current;
+                    
+                    // Apply font scaling
+                    const h1s = slide.querySelectorAll('h1');
+                    h1s.forEach(h1 => {
+                        h1.style.fontSize = `${3 * fontScale}em`;
+                    });
+                    
+                    const h2s = slide.querySelectorAll('h2');
+                    h2s.forEach(h2 => {
+                        h2.style.fontSize = `${2.5 * fontScale}em`;
+                    });
+                    
+                    const h3s = slide.querySelectorAll('h3');
+                    h3s.forEach(h3 => {
+                        h3.style.fontSize = `${2 * fontScale}em`;
+                    });
+                    
+                    const ps = slide.querySelectorAll('p');
+                    ps.forEach(p => {
+                        p.style.fontSize = `${1.2 * fontScale}em`;
+                    });
+                    
+                    const lis = slide.querySelectorAll('li');
+                    lis.forEach(li => {
+                        li.style.fontSize = `${1.2 * fontScale}em`;
+                    });
+                    
+                    const uls = slide.querySelectorAll('ul, ol');
+                    uls.forEach(ul => {
+                        ul.style.fontSize = `${1.2 * fontScale}em`;
+                    });
+
+                    const codes = slide.querySelectorAll('code');
+                    codes.forEach(code => {
+                        code.style.fontSize = `${0.9 * fontScale}em`;
+                    });
+
+                    const pres = slide.querySelectorAll('pre');
+                    pres.forEach(pre => {
+                        pre.style.fontSize = `${1 * fontScale}em`;
+                    });
+
+                    const contentLefts = slide.querySelectorAll('.content-left');
+                    contentLefts.forEach(contentLeft => {
+                        contentLeft.style.fontSize = `${1.2 * fontScale}em`;
+                    });
+
+                    const contentRights = slide.querySelectorAll('.content-right');
+                    contentRights.forEach(contentRight => {
+                        contentRight.style.fontSize = `${1.2 * fontScale}em`;
+                    });
+
+                    const contentSections = slide.querySelectorAll('.content-section');
+                    contentSections.forEach(contentSection => {
+                        contentSection.style.fontSize = `${1.2 * fontScale}em`;
+                    });
+                }
+            }, [fontScale, presentationMode, presentationSlideIndex, slides]);
 
             const updateSlideContent = (content) => {
                 setSlides(slides.map((slide, index) => 
@@ -1832,6 +1913,7 @@ Make it informative and visually appealing when rendered.`)}`);
                 setPresentationMode(true);
                 setPresentationSlideIndex(currentSlideIndex);
                 setZoomLevel(1); // Reset zoom when starting presentation
+                setFontScale(1); // Reset font scale when starting presentation
             };
 
             const nextSlide = () => {
@@ -1849,6 +1931,7 @@ Make it informative and visually appealing when rendered.`)}`);
             const exitPresentation = () => {
                 setPresentationMode(false);
                 setZoomLevel(1); // Reset zoom when exiting
+                setFontScale(1); // Reset font scale when exiting
             };
 
             // Close dropdown when clicking outside
@@ -1877,20 +1960,32 @@ Make it informative and visually appealing when rendered.`)}`);
                             exitPresentation();
                         } else if (e.key === '+' || e.key === '=') {
                             e.preventDefault();
-                            zoomIn();
+                            if (e.ctrlKey || e.metaKey) {
+                                increaseFontSize(); // Ctrl/Cmd + for font size
+                            } else {
+                                zoomIn(); // Just + for zoom
+                            }
                         } else if (e.key === '-') {
                             e.preventDefault();
-                            zoomOut();
+                            if (e.ctrlKey || e.metaKey) {
+                                decreaseFontSize(); // Ctrl/Cmd - for font size
+                            } else {
+                                zoomOut(); // Just - for zoom
+                            }
                         } else if (e.key === '0') {
                             e.preventDefault();
-                            resetZoom();
+                            if (e.ctrlKey || e.metaKey) {
+                                resetFontSize(); // Ctrl/Cmd 0 for font reset
+                            } else {
+                                resetZoom(); // Just 0 for zoom reset
+                            }
                         }
                     }
                 };
 
                 window.addEventListener('keydown', handleKeyDown);
                 return () => window.removeEventListener('keydown', handleKeyDown);
-            }, [presentationMode, presentationSlideIndex, zoomLevel]);
+            }, [presentationMode, presentationSlideIndex, zoomLevel, fontScale]);
 
             return (
                 <div className="app">
@@ -2176,18 +2271,21 @@ Make it informative and visually appealing when rendered.`)}`);
                         </div>
                     )}
 
-                    {/* Presentation Mode with Inline Zoom Controls */}
+                    {/* Presentation Mode with Zoom and Font Size Controls */}
                     {presentationMode && (
                         <div className="presentation-mode">
                             <div className="presentation-container" style={{ transform: `scale(${zoomLevel})` }}>
-                                <div className="presentation-slide">
+                                <div 
+                                    ref={presentationSlideRef}
+                                    className="presentation-slide"
+                                >
                                     <div dangerouslySetInnerHTML={{
                                         __html: renderContent(slides[presentationSlideIndex]?.content || '')
                                     }} />
                                 </div>
                             </div>
                             
-                            {/* Combined Navigation and Zoom Controls */}
+                            {/* Combined Navigation, Zoom, and Font Size Controls */}
                             <div className="presentation-controls">
                                 <button onClick={prevSlide} disabled={presentationSlideIndex === 0}>
                                     Previous
@@ -2202,7 +2300,7 @@ Make it informative and visually appealing when rendered.`)}`);
                                     Exit
                                 </button>
                                 
-                                {/* Zoom Controls - Inline with navigation */}
+                                {/* Zoom Controls */}
                                 <div className="zoom-controls">
                                     <button 
                                         className="btn-zoom"
@@ -2229,6 +2327,34 @@ Make it informative and visually appealing when rendered.`)}`);
                                         Reset
                                     </button>
                                 </div>
+
+                                {/* Font Size Controls */}
+                                <div className="font-controls">
+                                    <button 
+                                        className="btn-font"
+                                        onClick={decreaseFontSize}
+                                        disabled={fontScale <= 0.5}
+                                        title="Decrease Font Size (Ctrl+-)"
+                                    >
+                                        A-
+                                    </button>
+                                    <span className="font-level">{Math.round(fontScale * 100)}%</span>
+                                    <button 
+                                        className="btn-font"
+                                        onClick={increaseFontSize}
+                                        disabled={fontScale >= 2.0}
+                                        title="Increase Font Size (Ctrl++)"
+                                    >
+                                        A+
+                                    </button>
+                                    <button 
+                                        className="btn btn-sm"
+                                        onClick={resetFontSize}
+                                        title="Reset Font Size (Ctrl+0)"
+                                    >
+                                        Reset
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -2250,6 +2376,7 @@ Make it informative and visually appealing when rendered.`)}`);
         const root = createRoot(container);
         root.render(<SlideEditor />);
     </script>
+
 
 
 </body></html>
