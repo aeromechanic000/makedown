@@ -1,6 +1,6 @@
 # Makedown
 
-Web Application: [Makedown](https://makedown-am.vercel.app/)
+Web Application: [Makedown](https://makedown.vercel.app/)
 
 A web app to create and edit markdown based slides.
 
