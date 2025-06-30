@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com;
         connect-src 'self' https://text.pollinations.ai;
@@ -748,21 +746,26 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
             transform-origin: center;
             transition: transform 0.3s ease;
+            border: 1px solid #e5e7eb;
         }
         
+        /* Updated presentation slide styling to match preview exactly */
         .presentation-slide h1 {
+            font-size: 2.5em;
             margin-bottom: 0.5em;
             color: #111827;
             font-weight: 700;
         }
         
         .presentation-slide h2 {
+            font-size: 2em;
             margin-bottom: 0.5em;
             color: #374151;
             font-weight: 600;
         }
         
         .presentation-slide h3 {
+            font-size: 1.5em;
             margin-bottom: 0.5em;
             color: #4b5563;
             font-weight: 600;
@@ -784,6 +787,22 @@
             line-height: 1.6;
         }
         
+        .presentation-slide code {
+            background: #f1f5f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9em;
+        }
+        
+        .presentation-slide pre {
+            background: #f1f5f9;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1em;
+        }
+        
         .presentation-slide img {
             max-width: 100%;
             height: auto;
@@ -792,9 +811,9 @@
         
         .presentation-slide .image-layout {
             display: flex;
-            gap: 30px;
+            gap: 20px;
             align-items: flex-start;
-            margin: 30px 0;
+            margin: 20px 0;
         }
         
         .presentation-slide .image-left {
@@ -811,21 +830,21 @@
         
         .presentation-slide .content-left {
             flex: 1;
-            padding-right: 30px;
+            padding-right: 20px;
         }
         
         .presentation-slide .content-right {
             flex: 1;
-            padding-left: 30px;
+            padding-left: 20px;
         }
         
         .presentation-slide .image-layout-full {
             display: block;
-            margin: 30px 0;
+            margin: 20px 0;
         }
         
         .presentation-slide .content-section {
-            margin-top: 30px;
+            margin-top: 20px;
         }
         
         .presentation-controls {
@@ -1126,65 +1145,126 @@
                 setFontScale(1);
             };
 
-            // Apply font scaling to presentation slide
+            // Apply font scaling to presentation slide - now matches preview styling exactly
             useEffect(() => {
                 if (presentationSlideRef.current && presentationMode) {
                     const slide = presentationSlideRef.current;
                     
-                    // Apply font scaling
+                    // Apply font scaling with same base values as preview
                     const h1s = slide.querySelectorAll('h1');
                     h1s.forEach(h1 => {
-                        h1.style.fontSize = `${3 * fontScale}em`;
+                        h1.style.fontSize = `${2.5 * fontScale}em`;
+                        h1.style.marginBottom = '0.5em';
+                        h1.style.color = '#111827';
+                        h1.style.fontWeight = '700';
                     });
                     
                     const h2s = slide.querySelectorAll('h2');
                     h2s.forEach(h2 => {
-                        h2.style.fontSize = `${2.5 * fontScale}em`;
+                        h2.style.fontSize = `${2 * fontScale}em`;
+                        h2.style.marginBottom = '0.5em';
+                        h2.style.color = '#374151';
+                        h2.style.fontWeight = '600';
                     });
                     
                     const h3s = slide.querySelectorAll('h3');
                     h3s.forEach(h3 => {
-                        h3.style.fontSize = `${2 * fontScale}em`;
+                        h3.style.fontSize = `${1.5 * fontScale}em`;
+                        h3.style.marginBottom = '0.5em';
+                        h3.style.color = '#4b5563';
+                        h3.style.fontWeight = '600';
                     });
                     
                     const ps = slide.querySelectorAll('p');
                     ps.forEach(p => {
-                        p.style.fontSize = `${1.2 * fontScale}em`;
+                        p.style.fontSize = `${1 * fontScale}em`;
+                        p.style.marginBottom = '1em';
+                        p.style.lineHeight = '1.6';
+                        p.style.color = '#374151';
                     });
                     
                     const lis = slide.querySelectorAll('li');
                     lis.forEach(li => {
-                        li.style.fontSize = `${1.2 * fontScale}em`;
+                        li.style.fontSize = `${1 * fontScale}em`;
+                        li.style.marginBottom = '0.5em';
+                        li.style.lineHeight = '1.6';
                     });
                     
                     const uls = slide.querySelectorAll('ul, ol');
                     uls.forEach(ul => {
-                        ul.style.fontSize = `${1.2 * fontScale}em`;
+                        ul.style.marginBottom = '1em';
+                        ul.style.paddingLeft = '2em';
                     });
 
                     const codes = slide.querySelectorAll('code');
                     codes.forEach(code => {
+                        code.style.background = '#f1f5f9';
+                        code.style.padding = '2px 4px';
+                        code.style.borderRadius = '4px';
+                        code.style.fontFamily = "'SF Mono', Monaco, monospace";
                         code.style.fontSize = `${0.9 * fontScale}em`;
                     });
 
                     const pres = slide.querySelectorAll('pre');
                     pres.forEach(pre => {
+                        pre.style.background = '#f1f5f9';
+                        pre.style.padding = '16px';
+                        pre.style.borderRadius = '8px';
+                        pre.style.overflowX = 'auto';
+                        pre.style.marginBottom = '1em';
                         pre.style.fontSize = `${1 * fontScale}em`;
+                    });
+
+                    const imageLayouts = slide.querySelectorAll('.image-layout');
+                    imageLayouts.forEach(layout => {
+                        layout.style.display = 'flex';
+                        layout.style.gap = '20px';
+                        layout.style.alignItems = 'flex-start';
+                        layout.style.margin = '20px 0';
+                    });
+
+                    const imageLefts = slide.querySelectorAll('.image-left');
+                    imageLefts.forEach(imgLeft => {
+                        imgLeft.style.flex = '1';
+                        imgLeft.style.display = 'flex';
+                        imgLeft.style.flexDirection = 'column';
+                    });
+
+                    const imageRights = slide.querySelectorAll('.image-right');
+                    imageRights.forEach(imgRight => {
+                        imgRight.style.flex = '1';
+                        imgRight.style.display = 'flex';
+                        imgRight.style.flexDirection = 'column';
                     });
 
                     const contentLefts = slide.querySelectorAll('.content-left');
                     contentLefts.forEach(contentLeft => {
-                        contentLeft.style.fontSize = `${1.2 * fontScale}em`;
+                        contentLeft.style.flex = '1';
+                        contentLeft.style.paddingRight = '20px';
                     });
 
                     const contentRights = slide.querySelectorAll('.content-right');
                     contentRights.forEach(contentRight => {
-                        contentRight.style.fontSize = `${1.2 * fontScale}em`;
+                        contentRight.style.flex = '1';
+                        contentRight.style.paddingLeft = '20px';
+                    });
+
+                    const imageLayoutFulls = slide.querySelectorAll('.image-layout-full');
+                    imageLayoutFulls.forEach(imgFull => {
+                        imgFull.style.display = 'block';
+                        imgFull.style.margin = '20px 0';
                     });
 
                     const contentSections = slide.querySelectorAll('.content-section');
                     contentSections.forEach(contentSection => {
-                        contentSection.style.fontSize = `${1.2 * fontScale}em`;
+                        contentSection.style.marginTop = '20px';
+                    });
+
+                    const imgs = slide.querySelectorAll('img');
+                    imgs.forEach(img => {
+                        img.style.maxWidth = '100%';
+                        img.style.height = 'auto';
+                        img.style.borderRadius = '6px';
                     });
                 }
             }, [fontScale, presentationMode, presentationSlideIndex, slides]);
@@ -2377,6 +2457,7 @@ Make it informative and visually appealing when rendered.`)}`);
         const root = createRoot(container);
         root.render(<SlideEditor />);
     </script>
+
 
 
 
