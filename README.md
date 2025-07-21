@@ -11,7 +11,7 @@ Author's webpage: [aeromechanic.fun](https://aeromechanic.fun)
 ## Prompt to Generate Presentation 
 
 ```
-Create a complete presentation about: [topic]. 
+Create a complete presentation about: {topic}. 
 
 Start with a title slide containing:
 - Main title with #
