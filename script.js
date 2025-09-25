@@ -8,7 +8,6 @@ This is your first slide: 1) Edit markdown on the left; 2) See preview on the ri
 Best Practice Hint: Generate markdown slides with your favorite AI, and paste here.
 \`\`\`
 Generate a 10-page slide deck in Markdown format that introduces {TOPIC of YOUR SLIDES}. 
-- Use simple, clear code examples on each slide. 
 - Separate slides with ---.
 - Do not use tables, since they may be confused with page breaks.
 \`\`\`
