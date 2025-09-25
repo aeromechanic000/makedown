@@ -1264,7 +1264,7 @@ Make it informative and visually appealing when rendered.`)}`);
                             placeholder="Enter detailed AI prompt to generate professional slide content..."
                             value={aiPrompt}
                             onChange={(e) => setAiPrompt(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && generateWithAI(false)}
+                            // onKeyDown={(e) => e.key === 'Enter' && generateWithAI(false)}
                         />
                         <button 
                             className="btn btn-ai btn-sm" 
