@@ -64,254 +64,7 @@ Generate a 10-page slide deck in Markdown format that introduces {TOPIC of YOUR 
     // Enhanced font scaling for presentation mode - improved scaling with better base sizes
     useEffect(() => {
         if (presentationSlideRef.current && presentationMode) {
-            const slide = presentationSlideRef.current;
-            
-            // Apply enhanced font scaling for the new presentation styles
-            const h1s = slide.querySelectorAll('h1');
-            h1s.forEach(h1 => {
-                h1.style.fontSize = `${4.5 * fontScale}rem`;
-                h1.style.marginBottom = `${2 * fontScale}rem`;
-                h1.style.color = 'transparent';
-                h1.style.fontWeight = '900';
-                h1.style.lineHeight = '1.05';
-                h1.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e40af 40%, #3730a3 100%)';
-                h1.style.webkitBackgroundClip = 'text';
-                h1.style.webkitTextFillColor = 'transparent';
-                h1.style.backgroundClip = 'text';
-                h1.style.textShadow = '0 4px 8px rgba(30, 41, 59, 0.2)';
-                h1.style.letterSpacing = '-0.03em';
-                h1.style.textAlign = 'center';
-                h1.style.paddingBottom = `${2 * fontScale}rem`;
-            });
-            
-            const h2s = slide.querySelectorAll('h2');
-            h2s.forEach(h2 => {
-                h2.style.fontSize = `${3.5 * fontScale}rem`;
-                h2.style.marginBottom = `${1.5 * fontScale}rem`;
-                h2.style.color = '#0f172a';
-                h2.style.fontWeight = '800';
-                h2.style.lineHeight = '1.15';
-                h2.style.paddingLeft = '2rem';
-                h2.style.marginLeft = '-2rem';
-            });
-            
-            const h3s = slide.querySelectorAll('h3');
-            h3s.forEach(h3 => {
-                h3.style.fontSize = `${2.75 * fontScale}rem`;
-                h3.style.marginBottom = `${1.25 * fontScale}rem`;
-                h3.style.color = '#1e293b';
-                h3.style.fontWeight = '700';
-                h3.style.lineHeight = '1.25';
-                h3.style.paddingLeft = '2rem';
-            });
-
-            const h4s = slide.querySelectorAll('h4');
-            h4s.forEach(h4 => {
-                h4.style.fontSize = `${2.25 * fontScale}rem`;
-                h4.style.marginBottom = `${1 * fontScale}rem`;
-                h4.style.color = '#334155';
-                h4.style.fontWeight = '650';
-                h4.style.lineHeight = '1.3';
-            });
-
-            const h5s = slide.querySelectorAll('h5');
-            h5s.forEach(h5 => {
-                h5.style.fontSize = `${1.875 * fontScale}rem`;
-                h5.style.marginBottom = `${0.875 * fontScale}rem`;
-                h5.style.color = '#475569';
-                h5.style.fontWeight = '600';
-                h5.style.lineHeight = '1.35';
-            });
-
-            const h6s = slide.querySelectorAll('h6');
-            h6s.forEach(h6 => {
-                h6.style.fontSize = `${1.5 * fontScale}rem`;
-                h6.style.marginBottom = `${0.75 * fontScale}rem`;
-                h6.style.color = '#64748b';
-                h6.style.fontWeight = '600';
-                h6.style.lineHeight = '1.4';
-            });
-            
-            const ps = slide.querySelectorAll('p');
-            ps.forEach(p => {
-                p.style.fontSize = `${1.875 * fontScale}rem`;
-                p.style.marginBottom = `${1.75 * fontScale}rem`;
-                p.style.lineHeight = '1.7';
-                p.style.color = '#1e293b';
-                p.style.textAlign = 'justify';
-                p.style.textJustify = 'inter-word';
-                p.style.fontWeight = '400';
-                p.style.textShadow = '0 1px 2px rgba(0, 0, 0, 0.03)';
-            });
-            
-            const lis = slide.querySelectorAll('li');
-            lis.forEach(li => {
-                li.style.fontSize = `${1.75 * fontScale}rem`;
-                li.style.marginBottom = `${1.5 * fontScale}rem`;
-                li.style.lineHeight = '1.65';
-                li.style.color = '#1e293b';
-                li.style.paddingLeft = '3.5rem';
-            });
-            
-            const uls = slide.querySelectorAll('ul, ol');
-            uls.forEach(ul => {
-                ul.style.marginBottom = `${2.5 * fontScale}rem`;
-                ul.style.paddingLeft = '0';
-                ul.style.listStyle = 'none';
-            });
-
-            // Enhanced code styling
-            const codes = slide.querySelectorAll('code');
-            codes.forEach(code => {
-                code.style.background = 'linear-gradient(135deg, #f8fafc, #f1f5f9)';
-                code.style.padding = '0.4rem 0.8rem';
-                code.style.borderRadius = '8px';
-                code.style.fontFamily = "'SF Mono', Monaco, 'Consolas', 'Liberation Mono', 'Courier New', monospace";
-                code.style.fontSize = `${1.4 * fontScale}rem`;
-                code.style.color = '#334155';
-                code.style.border = '1px solid #e2e8f0';
-                code.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
-                code.style.fontWeight = '500';
-                code.style.letterSpacing = '0.025em';
-            });
-
-            const pres = slide.querySelectorAll('pre');
-            pres.forEach(pre => {
-                pre.style.background = 'linear-gradient(135deg, #f8fafc, #f1f5f9)';
-                pre.style.border = '2px solid #e2e8f0';
-                pre.style.padding = '2.5rem';
-                pre.style.borderRadius = '16px';
-                pre.style.overflowX = 'auto';
-                pre.style.margin = '3rem 0';
-                pre.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8)';
-            });
-
-            const preCode = slide.querySelectorAll('pre code');
-            preCode.forEach(code => {
-                code.style.background = 'none';
-                code.style.padding = '0';
-                code.style.color = '#334155';
-                code.style.border = 'none';
-                code.style.boxShadow = 'none';
-                code.style.fontSize = `${1.25 * fontScale}rem`;
-                code.style.lineHeight = '1.7';
-                code.style.fontWeight = '500';
-                code.style.letterSpacing = '0.025em';
-                code.style.display = 'block';
-            });
-
-            // Enhanced blockquote styling
-            const blockquotes = slide.querySelectorAll('blockquote');
-            blockquotes.forEach(blockquote => {
-                blockquote.style.border = 'none';
-                blockquote.style.background = 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)';
-                blockquote.style.padding = '3rem';
-                blockquote.style.margin = '3rem 0';
-                blockquote.style.fontStyle = 'italic';
-                blockquote.style.fontSize = `${1.75 * fontScale}rem`;
-                blockquote.style.lineHeight = '1.6';
-                blockquote.style.borderRadius = '24px';
-                blockquote.style.boxShadow = '0 12px 24px rgba(59, 130, 246, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8)';
-                blockquote.style.borderLeft = '8px solid #3730a3';
-                blockquote.style.color = '#0f172a';
-            });
-
-            // Enhanced table styling
-            const tables = slide.querySelectorAll('table');
-            tables.forEach(table => {
-                table.style.width = '100%';
-                table.style.borderCollapse = 'separate';
-                table.style.borderSpacing = '0';
-                table.style.margin = '3rem 0';
-                table.style.borderRadius = '16px';
-                table.style.overflow = 'hidden';
-                table.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08)';
-                table.style.background = 'white';
-            });
-
-            const ths = slide.querySelectorAll('th');
-            ths.forEach(th => {
-                th.style.background = 'linear-gradient(135deg, #0f172a, #1e293b)';
-                th.style.color = 'white';
-                th.style.padding = '1.75rem 2rem';
-                th.style.fontWeight = '700';
-                th.style.fontSize = `${1.4 * fontScale}rem`;
-                th.style.textAlign = 'left';
-                th.style.textTransform = 'uppercase';
-                th.style.letterSpacing = '0.05em';
-                th.style.textShadow = '0 1px 2px rgba(0, 0, 0, 0.3)';
-            });
-
-            const tds = slide.querySelectorAll('td');
-            tds.forEach(td => {
-                td.style.padding = '1.5rem 2rem';
-                td.style.borderBottom = '1px solid #e2e8f0';
-                td.style.fontSize = `${1.3 * fontScale}rem`;
-                td.style.color = '#1e293b';
-                td.style.background = 'rgba(255, 255, 255, 0.9)';
-            });
-
-            // Enhanced image styling
-            const imgs = slide.querySelectorAll('img');
-            imgs.forEach(img => {
-                img.style.maxWidth = '100%';
-                img.style.height = 'auto';
-                img.style.borderRadius = '20px';
-                img.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1)';
-                img.style.margin = '3rem auto';
-                img.style.border = '3px solid rgba(255, 255, 255, 0.8)';
-                img.style.display = 'block';
-            });
-
-            // Layout enhancements
-            const imageLayouts = slide.querySelectorAll('.image-layout');
-            imageLayouts.forEach(layout => {
-                layout.style.display = 'flex';
-                layout.style.gap = '3rem';
-                layout.style.alignItems = 'flex-start';
-                layout.style.margin = '3rem 0';
-                layout.style.background = 'rgba(255, 255, 255, 0.4)';
-                layout.style.padding = '2.5rem';
-                layout.style.borderRadius = '20px';
-                layout.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.08)';
-                layout.style.backdropFilter = 'blur(10px)';
-                layout.style.border = '1px solid rgba(255, 255, 255, 0.3)';
-            });
-
-            // Apply enhanced text styling
-            const strongs = slide.querySelectorAll('strong');
-            strongs.forEach(strong => {
-                strong.style.color = '#1e40af';
-                strong.style.fontWeight = '700';
-                strong.style.textShadow = '0 1px 2px rgba(30, 64, 175, 0.15)';
-            });
-
-            const ems = slide.querySelectorAll('em');
-            ems.forEach(em => {
-                em.style.color = '#7c3aed';
-                em.style.fontStyle = 'italic';
-                em.style.fontWeight = '500';
-            });
-
-            // Enhanced link styling
-            const links = slide.querySelectorAll('a');
-            links.forEach(link => {
-                link.style.color = '#3730a3';
-                link.style.textDecoration = 'none';
-                link.style.fontWeight = '600';
-                link.style.borderBottom = '2px solid transparent';
-            });
-
-            // Enhanced HR styling
-            const hrs = slide.querySelectorAll('hr');
-            hrs.forEach(hr => {
-                hr.style.border = 'none';
-                hr.style.height = '4px';
-                hr.style.background = 'linear-gradient(90deg, transparent, #3730a3, transparent)';
-                hr.style.margin = '4rem 0';
-                hr.style.borderRadius = '2px';
-                hr.style.boxShadow = '0 2px 4px rgba(59, 130, 246, 0.2)';
-            });
+            applyPresentationStyles(presentationSlideRef.current, fontScale);
         }
     }, [fontScale, presentationMode, presentationSlideIndex, slides]);
 
@@ -836,7 +589,6 @@ Make it informative and visually appealing when rendered.`)}`);
             const { jsPDF } = window.jspdf;
             
             // Custom 16:9 format in mm (width x height)
-            // Using 254mm x 143mm for proper 16:9 ratio
             const pageWidth = 254;
             const pageHeight = 143;
             
@@ -849,100 +601,45 @@ Make it informative and visually appealing when rendered.`)}`);
             for (let i = 0; i < slides.length; i++) {
                 if (i > 0) pdf.addPage();
                 
-                // Create a temporary slide container matching the enhanced presentation
-                const tempDiv = document.createElement('div');
-                tempDiv.style.cssText = `
+                // Create a temporary container that matches presentation mode exactly
+                const tempContainer = document.createElement('div');
+                tempContainer.style.cssText = `
+                    position: fixed;
+                    top: -20000px;
+                    left: -20000px;
                     width: 1600px;
                     height: 900px;
                     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-                    padding: 80px;
+                    border-radius: 24px;
+                    padding: 64px;
                     box-sizing: border-box;
-                    position: fixed;
-                    top: -15000px;
-                    left: -15000px;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                     overflow: hidden;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 `;
                 
-                tempDiv.innerHTML = renderContent(slides[i].content);
+                // Set the HTML content
+                tempContainer.innerHTML = renderContent(slides[i].content);
+                document.body.appendChild(tempContainer);
                 
-                // Apply enhanced styling matching the new presentation styles
-                const h1s = tempDiv.querySelectorAll('h1');
-                h1s.forEach(h1 => {
-                    h1.style.cssText = 'font-size: 120px; margin-bottom: 60px; color: transparent; font-weight: 900; line-height: 1.05; background: linear-gradient(135deg, #0f172a 0%, #1e40af 40%, #3730a3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; letter-spacing: -0.03em;';
-                });
-                
-                const h2s = tempDiv.querySelectorAll('h2');
-                h2s.forEach(h2 => {
-                    h2.style.cssText = 'font-size: 96px; margin-bottom: 48px; color: #0f172a; font-weight: 800; line-height: 1.15; padding-left: 2rem; margin-left: -2rem;';
-                });
-                
-                const h3s = tempDiv.querySelectorAll('h3');
-                h3s.forEach(h3 => {
-                    h3.style.cssText = 'font-size: 72px; margin-bottom: 36px; color: #1e293b; font-weight: 700; line-height: 1.25; padding-left: 2rem;';
-                });
-                
-                const ps = tempDiv.querySelectorAll('p');
-                ps.forEach(p => {
-                    p.style.cssText = 'font-size: 48px; margin-bottom: 48px; line-height: 1.7; color: #1e293b; text-align: justify;';
-                });
-                
-                const lis = tempDiv.querySelectorAll('li');
-                lis.forEach(li => {
-                    li.style.cssText = 'font-size: 44px; margin-bottom: 36px; line-height: 1.65; color: #1e293b; padding-left: 80px;';
-                });
-                
-                const uls = tempDiv.querySelectorAll('ul, ol');
-                uls.forEach(ul => {
-                    ul.style.cssText = 'margin-bottom: 60px; padding-left: 0; list-style: none;';
-                });
-
-                // Enhanced code styling for PDF
-                const codes = tempDiv.querySelectorAll('code');
-                codes.forEach(code => {
-                    code.style.cssText = 'background: linear-gradient(135deg, #f8fafc, #f1f5f9); padding: 12px 16px; border-radius: 8px; font-family: Monaco, monospace; font-size: 36px; color: #334155; border: 1px solid #e2e8f0;';
-                });
-
-                const pres = tempDiv.querySelectorAll('pre');
-                pres.forEach(pre => {
-                    pre.style.cssText = 'background: linear-gradient(135deg, #f8fafc, #f1f5f9); border: 2px solid #e2e8f0; padding: 40px; border-radius: 16px; margin-bottom: 40px; overflow: hidden;';
-                });
-
-                // Enhanced blockquote styling
-                const blockquotes = tempDiv.querySelectorAll('blockquote');
-                blockquotes.forEach(blockquote => {
-                    blockquote.style.cssText = 'background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 60px; margin: 60px 0; font-style: italic; font-size: 44px; border-radius: 24px; border-left: 8px solid #3730a3; color: #0f172a;';
-                });
-
-                // Style image layouts
-                const imageLayouts = tempDiv.querySelectorAll('.image-layout');
-                imageLayouts.forEach(layout => {
-                    layout.style.cssText = 'display: flex; gap: 60px; align-items: flex-start; margin: 60px 0; background: rgba(255, 255, 255, 0.4); padding: 50px; border-radius: 20px;';
-                });
-
-                const imgs = tempDiv.querySelectorAll('img');
-                imgs.forEach(img => {
-                    img.style.cssText = 'max-width: 100%; height: auto; border-radius: 20px; margin: 60px auto; display: block; border: 3px solid rgba(255, 255, 255, 0.8);';
-                });
-                
-                document.body.appendChild(tempDiv);
+                // Apply the exact same styles as presentation mode
+                applyPresentationStyles(tempContainer, 1); // Use fontScale of 1 for consistency
                 
                 try {
-                    const canvas = await html2canvas(tempDiv, {
+                    const canvas = await html2canvas(tempContainer, {
                         width: 1600,
                         height: 900,
-                        scale: 1,
+                        scale: 2, // Higher scale for better quality
                         useCORS: true,
                         allowTaint: true,
-                        backgroundColor: '#ffffff'
+                        backgroundColor: null,
+                        logging: false
                     });
                     
                     const imgData = canvas.toDataURL('image/png', 1.0);
-                    // Add image to fill the entire 16:9 page
-                    pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
+                    pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight, '', 'FAST');
                 } catch (error) {
                     console.error('Error rendering slide:', error);
-                    // Fallback to text-based rendering with proper scaling
+                    // Fallback to text rendering
                     pdf.setFontSize(20);
                     pdf.text(`Slide ${i + 1}`, 20, 25);
                     pdf.setFontSize(14);
@@ -957,10 +654,10 @@ Make it informative and visually appealing when rendered.`)}`);
                     });
                 }
                 
-                document.body.removeChild(tempDiv);
+                document.body.removeChild(tempContainer);
             }
             
-            pdf.save('makedown-slides-enhanced.pdf');
+            pdf.save('makedown-slides.pdf');
         } catch (error) {
             console.error('Error creating PDF:', error);
             alert('Error creating PDF. Please try again.');
@@ -970,6 +667,258 @@ Make it informative and visually appealing when rendered.`)}`);
         }
     };
 
+    // Helper function to apply presentation styles consistently
+    const applyPresentationStyles = (container, fontScale) => {
+        // H1 styling
+        const h1s = container.querySelectorAll('h1');
+        h1s.forEach(h1 => {
+            h1.style.fontSize = `${4.5 * fontScale}rem`;
+            h1.style.marginBottom = `${2 * fontScale}rem`;
+            h1.style.color = 'linear-gradient(135deg, #0f172a 0%, #1e40af 40%, #3730a3 100%)';
+            h1.style.fontWeight = '900';
+            h1.style.lineHeight = '1.05';
+            h1.style.webkitBackgroundClip = 'text';
+            h1.style.webkitTextFillColor = 'transparent';
+            h1.style.backgroundClip = 'text';
+            h1.style.letterSpacing = '-0.03em';
+            h1.style.textAlign = 'center';
+            h1.style.paddingBottom = `${2 * fontScale}rem`;
+        });
+        
+        // H2 styling
+        const h2s = container.querySelectorAll('h2');
+        h2s.forEach(h2 => {
+            h2.style.fontSize = `${3.5 * fontScale}rem`;
+            h2.style.marginBottom = `${1.5 * fontScale}rem`;
+            h2.style.color = '#0f172a';
+            h2.style.fontWeight = '800';
+            h2.style.lineHeight = '1.15';
+            h2.style.paddingLeft = '2rem';
+            h2.style.marginLeft = '-2rem';
+        });
+        
+        // H3 styling
+        const h3s = container.querySelectorAll('h3');
+        h3s.forEach(h3 => {
+            h3.style.fontSize = `${2.75 * fontScale}rem`;
+            h3.style.marginBottom = `${1.25 * fontScale}rem`;
+            h3.style.color = '#1e293b';
+            h3.style.fontWeight = '700';
+            h3.style.lineHeight = '1.25';
+            h3.style.paddingLeft = '2rem';
+        });
+
+        // H4-H6 styling
+        const h4s = container.querySelectorAll('h4');
+        h4s.forEach(h4 => {
+            h4.style.fontSize = `${2.25 * fontScale}rem`;
+            h4.style.marginBottom = `${1 * fontScale}rem`;
+            h4.style.color = '#334155';
+            h4.style.fontWeight = '650';
+            h4.style.lineHeight = '1.3';
+        });
+
+        const h5s = container.querySelectorAll('h5');
+        h5s.forEach(h5 => {
+            h5.style.fontSize = `${1.875 * fontScale}rem`;
+            h5.style.marginBottom = `${0.875 * fontScale}rem`;
+            h5.style.color = '#475569';
+            h5.style.fontWeight = '600';
+            h5.style.lineHeight = '1.35';
+        });
+
+        const h6s = container.querySelectorAll('h6');
+        h6s.forEach(h6 => {
+            h6.style.fontSize = `${1.5 * fontScale}rem`;
+            h6.style.marginBottom = `${0.75 * fontScale}rem`;
+            h6.style.color = '#64748b';
+            h6.style.fontWeight = '600';
+            h6.style.lineHeight = '1.4';
+        });
+        
+        // Paragraph styling
+        const ps = container.querySelectorAll('p');
+        ps.forEach(p => {
+            p.style.fontSize = `${1.875 * fontScale}rem`;
+            p.style.marginBottom = `${1.75 * fontScale}rem`;
+            p.style.lineHeight = '1.7';
+            p.style.color = '#1e293b';
+            p.style.textAlign = 'justify';
+            p.style.textJustify = 'inter-word';
+            p.style.fontWeight = '400';
+        });
+        
+        // List item styling
+        const lis = container.querySelectorAll('li');
+        lis.forEach(li => {
+            li.style.fontSize = `${1.75 * fontScale}rem`;
+            li.style.marginBottom = `${1.5 * fontScale}rem`;
+            li.style.lineHeight = '1.65';
+            li.style.color = '#1e293b';
+            li.style.paddingLeft = '3.5rem';
+        });
+        
+        // List container styling
+        const uls = container.querySelectorAll('ul, ol');
+        uls.forEach(ul => {
+            ul.style.marginBottom = `${2.5 * fontScale}rem`;
+            ul.style.paddingLeft = '0';
+            ul.style.listStyle = 'none';
+        });
+
+        // Code styling
+        const codes = container.querySelectorAll('code');
+        codes.forEach(code => {
+            code.style.background = 'linear-gradient(135deg, #f8fafc, #f1f5f9)';
+            code.style.padding = '0.4rem 0.8rem';
+            code.style.borderRadius = '8px';
+            code.style.fontFamily = "'SF Mono', Monaco, 'Consolas', 'Liberation Mono', 'Courier New', monospace";
+            code.style.fontSize = `${1.4 * fontScale}rem`;
+            code.style.color = '#334155';
+            code.style.border = '1px solid #e2e8f0';
+            code.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+            code.style.fontWeight = '500';
+            code.style.letterSpacing = '0.025em';
+        });
+
+        // Pre styling
+        const pres = container.querySelectorAll('pre');
+        pres.forEach(pre => {
+            pre.style.background = 'linear-gradient(135deg, #f8fafc, #f1f5f9)';
+            pre.style.border = '2px solid #e2e8f0';
+            pre.style.padding = '2.5rem';
+            pre.style.borderRadius = '16px';
+            pre.style.overflowX = 'auto';
+            pre.style.margin = '3rem 0';
+            pre.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8)';
+        });
+
+        // Pre code styling
+        const preCode = container.querySelectorAll('pre code');
+        preCode.forEach(code => {
+            code.style.background = 'none';
+            code.style.padding = '0';
+            code.style.color = '#334155';
+            code.style.border = 'none';
+            code.style.boxShadow = 'none';
+            code.style.fontSize = `${1.25 * fontScale}rem`;
+            code.style.lineHeight = '1.7';
+            code.style.fontWeight = '500';
+            code.style.letterSpacing = '0.025em';
+            code.style.display = 'block';
+        });
+
+        // Blockquote styling
+        const blockquotes = container.querySelectorAll('blockquote');
+        blockquotes.forEach(blockquote => {
+            blockquote.style.border = 'none';
+            blockquote.style.background = 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)';
+            blockquote.style.padding = '3rem';
+            blockquote.style.margin = '3rem 0';
+            blockquote.style.fontStyle = 'italic';
+            blockquote.style.fontSize = `${1.75 * fontScale}rem`;
+            blockquote.style.lineHeight = '1.6';
+            blockquote.style.borderRadius = '24px';
+            blockquote.style.boxShadow = '0 12px 24px rgba(59, 130, 246, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8)';
+            blockquote.style.borderLeft = '8px solid #3730a3';
+            blockquote.style.color = '#0f172a';
+        });
+
+        // Table styling
+        const tables = container.querySelectorAll('table');
+        tables.forEach(table => {
+            table.style.width = '100%';
+            table.style.borderCollapse = 'separate';
+            table.style.borderSpacing = '0';
+            table.style.margin = '3rem 0';
+            table.style.borderRadius = '16px';
+            table.style.overflow = 'hidden';
+            table.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08)';
+            table.style.background = 'white';
+        });
+
+        const ths = container.querySelectorAll('th');
+        ths.forEach(th => {
+            th.style.background = 'linear-gradient(135deg, #0f172a, #1e293b)';
+            th.style.color = 'white';
+            th.style.padding = '1.75rem 2rem';
+            th.style.fontWeight = '700';
+            th.style.fontSize = `${1.4 * fontScale}rem`;
+            th.style.textAlign = 'left';
+            th.style.textTransform = 'uppercase';
+            th.style.letterSpacing = '0.05em';
+        });
+
+        const tds = container.querySelectorAll('td');
+        tds.forEach(td => {
+            td.style.padding = '1.5rem 2rem';
+            td.style.borderBottom = '1px solid #e2e8f0';
+            td.style.fontSize = `${1.3 * fontScale}rem`;
+            td.style.color = '#1e293b';
+            td.style.background = 'rgba(255, 255, 255, 0.9)';
+        });
+
+        // Image styling
+        const imgs = container.querySelectorAll('img');
+        imgs.forEach(img => {
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
+            img.style.borderRadius = '20px';
+            img.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1)';
+            img.style.margin = '3rem auto';
+            img.style.border = '3px solid rgba(255, 255, 255, 0.8)';
+            img.style.display = 'block';
+        });
+
+        // Image layout styling
+        const imageLayouts = container.querySelectorAll('.image-layout');
+        imageLayouts.forEach(layout => {
+            layout.style.display = 'flex';
+            layout.style.gap = '3rem';
+            layout.style.alignItems = 'flex-start';
+            layout.style.margin = '3rem 0';
+            layout.style.background = 'rgba(255, 255, 255, 0.4)';
+            layout.style.padding = '2.5rem';
+            layout.style.borderRadius = '20px';
+            layout.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.08)';
+            layout.style.backdropFilter = 'blur(10px)';
+            layout.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+        });
+
+        // Text styling
+        const strongs = container.querySelectorAll('strong');
+        strongs.forEach(strong => {
+            strong.style.color = '#1e40af';
+            strong.style.fontWeight = '700';
+        });
+
+        const ems = container.querySelectorAll('em');
+        ems.forEach(em => {
+            em.style.color = '#7c3aed';
+            em.style.fontStyle = 'italic';
+            em.style.fontWeight = '500';
+        });
+
+        // Link styling
+        const links = container.querySelectorAll('a');
+        links.forEach(link => {
+            link.style.color = '#3730a3';
+            link.style.textDecoration = 'none';
+            link.style.fontWeight = '600';
+            link.style.borderBottom = '2px solid transparent';
+        });
+
+        // HR styling
+        const hrs = container.querySelectorAll('hr');
+        hrs.forEach(hr => {
+            hr.style.border = 'none';
+            hr.style.height = '4px';
+            hr.style.background = 'linear-gradient(90deg, transparent, #3730a3, transparent)';
+            hr.style.margin = '4rem 0';
+            hr.style.borderRadius = '2px';
+            hr.style.boxShadow = '0 2px 4px rgba(59, 130, 246, 0.2)';
+        });
+    };
     const exportToJSON = () => {
         const data = {
             slides: slides,
