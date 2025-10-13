@@ -261,7 +261,9 @@ Generate a 10-page slide deck in Markdown format that introduces {TOPIC of YOUR 
     // Enhanced font scaling for presentation mode
     useEffect(() => {
         if (presentationSlideRef.current && presentationMode) {
-            applyPresentationStyles(presentationSlideRef.current, fontScale);
+            setTimeout(() => {
+                applyPresentationStyles(presentationSlideRef.current, fontScale);
+            }, 0);
         }
     }, [fontScale, presentationMode, presentationSlideIndex, slides, colorScheme]);
 
@@ -861,9 +863,9 @@ Make it informative and visually appealing when rendered.`)}`);
             h1.style.color = theme.h1Color;
             h1.style.fontWeight = '900';
             h1.style.lineHeight = '1.05';
-            h1.style.webkitBackgroundClip = 'text';
-            h1.style.webkitTextFillColor = 'transparent';
-            h1.style.backgroundClip = 'text';
+            // h1.style.webkitBackgroundClip = 'text';
+            // h1.style.webkitTextFillColor = 'transparent';
+            // h1.style.backgroundClip = 'text';
             h1.style.letterSpacing = '-0.03em';
             h1.style.textAlign = 'center';
             h1.style.paddingBottom = `${2 * fontScale}rem`;
