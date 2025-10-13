@@ -29,7 +29,7 @@ const COLOR_SCHEMES = {
         h1Color: '#075985',
         h2Color: '#0c4a6e',
         h3Color: '#075985',
-        textColor: '#0c4a6e',
+        textColor: '#1e293b',
         accentColor: '#0284c7',
         secondaryAccent: '#0ea5e9',
         codeBackground: 'linear-gradient(135deg, #f0f9ff, #e0f2fe)',
@@ -48,7 +48,7 @@ const COLOR_SCHEMES = {
         h1Color: '#166534',
         h2Color: '#14532d',
         h3Color: '#166534',
-        textColor: '#14532d',
+        textColor: '#1e293b',
         accentColor: '#16a34a',
         secondaryAccent: '#22c55e',
         codeBackground: 'linear-gradient(135deg, #f0fdf4, #dcfce7)',
@@ -67,7 +67,7 @@ const COLOR_SCHEMES = {
         h1Color: '#9a3412',
         h2Color: '#7c2d12',
         h3Color: '#9a3412',
-        textColor: '#7c2d12',
+        textColor: '#1e293b',
         accentColor: '#ea580c',
         secondaryAccent: '#f97316',
         codeBackground: 'linear-gradient(135deg, #fff7ed, #ffedd5)',
@@ -86,7 +86,7 @@ const COLOR_SCHEMES = {
         h1Color: '#6b21a8',
         h2Color: '#581c87',
         h3Color: '#6b21a8',
-        textColor: '#581c87',
+        textColor: '#1e293b',
         accentColor: '#7c3aed',
         secondaryAccent: '#8b5cf6',
         codeBackground: 'linear-gradient(135deg, #faf5ff, #f3e8ff)',
@@ -105,7 +105,7 @@ const COLOR_SCHEMES = {
         h1Color: '#9f1239',
         h2Color: '#881337',
         h3Color: '#9f1239',
-        textColor: '#881337',
+        textColor: '#1e293b',
         accentColor: '#e11d48',
         secondaryAccent: '#f43f5e',
         codeBackground: 'linear-gradient(135deg, #fff1f2, #ffe4e6)',
@@ -143,7 +143,7 @@ const COLOR_SCHEMES = {
         h1Color: '#1e3a8a',
         h2Color: '#172554',
         h3Color: '#1e3a8a',
-        textColor: '#172554',
+        textColor: '#1e293b',
         accentColor: '#2563eb',
         secondaryAccent: '#3b82f6',
         codeBackground: 'linear-gradient(135deg, #eff6ff, #dbeafe)',
@@ -162,7 +162,7 @@ const COLOR_SCHEMES = {
         h1Color: '#047857',
         h2Color: '#064e3b',
         h3Color: '#047857',
-        textColor: '#064e3b',
+        textColor: '#1e293b',
         accentColor: '#059669',
         secondaryAccent: '#10b981',
         codeBackground: 'linear-gradient(135deg, #ecfdf5, #d1fae5)',
@@ -181,7 +181,7 @@ const COLOR_SCHEMES = {
         h1Color: '#92400e',
         h2Color: '#78350f',
         h3Color: '#92400e',
-        textColor: '#78350f',
+        textColor: '#1e293b',
         accentColor: '#d97706',
         secondaryAccent: '#f59e0b',
         codeBackground: 'linear-gradient(135deg, #fffbeb, #fef3c7)',
@@ -858,6 +858,7 @@ Make it informative and visually appealing when rendered.`)}`);
             h1.style.fontSize = `${4.5 * fontScale}rem`;
             h1.style.marginBottom = `${2 * fontScale}rem`;
             // h1.style.background = theme.h1Gradient;
+            h1.style.color = theme.h1Color;
             h1.style.fontWeight = '900';
             h1.style.lineHeight = '1.05';
             h1.style.webkitBackgroundClip = 'text';
@@ -867,6 +868,7 @@ Make it informative and visually appealing when rendered.`)}`);
             h1.style.textAlign = 'center';
             h1.style.paddingBottom = `${2 * fontScale}rem`;
             h1.style.position = 'relative';
+
             const existingAccent = h1.querySelector('.h1-accent');
             if (!existingAccent) {
                 const accent = document.createElement('div');
