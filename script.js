@@ -205,6 +205,15 @@ Generate a 10-page slide deck in Markdown format that introduces {TOPIC of YOUR 
 - Separate slides with ---.
 - Do not use tables, since they may be confused with page breaks.
 \`\`\`
+
+<table>
+<tr>
+    <td>* Now you have to upload image to sm.ms to include it in the slides.<br>The url to the upload image should start with "https://s2.loli.net".
+</td>
+<td width="10%"></td>
+    <td><img src="https://s2.loli.net/2025/04/18/RWaFJkY4gSDLViy.png" alt="Talk to bot." width="80" height="80"></td>
+</tr>
+</table>
         ` }
     ]);
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
