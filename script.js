@@ -394,74 +394,6 @@ Generate a 10-page slide deck in Markdown format that introduces {TOPIC of YOUR 
         return html;
     };
 
-    // Helper function to parse markdown content for PPTX export
-    const parseMarkdownForPptx = (content) => {
-        let processedContent = content;
-        uploadedImages.forEach((dataUrl, imageId) => {
-            const regex = new RegExp(`!\\[([^\\]]*)\\]\\(${imageId}\\)`, 'g');
-            processedContent = processedContent.replace(regex, `![${imageId}](${dataUrl})`);
-        });
-
-        const lines = processedContent.split('\n');
-        const elements = [];
-        let currentElement = null;
-
-        lines.forEach(line => {
-            line = line.trim();
-            if (!line) return;
-
-            if (line.startsWith('# ')) {
-                elements.push({
-                    type: 'title',
-                    text: line.replace('# ', ''),
-                    level: 1
-                });
-            } else if (line.startsWith('## ')) {
-                elements.push({
-                    type: 'title',
-                    text: line.replace('## ', ''),
-                    level: 2
-                });
-            } else if (line.startsWith('### ')) {
-                elements.push({
-                    type: 'title',
-                    text: line.replace('### ', ''),
-                    level: 3
-                });
-            }
-            else if (line.startsWith('- ') || line.startsWith('* ')) {
-                if (!currentElement || currentElement.type !== 'bullet') {
-                    currentElement = { type: 'bullet', items: [] };
-                    elements.push(currentElement);
-                }
-                currentElement.items.push(line.replace(/^[*-] /, ''));
-            }
-            else if (line.match(/!\[.*?\]\(.*?\)/)) {
-                const match = line.match(/!\[.*?\]\((.*?)\)/);
-                if (match) {
-                    elements.push({
-                        type: 'image',
-                        src: match[1]
-                    });
-                }
-            }
-            else if (!line.startsWith('<div') && !line.startsWith('</div>')) {
-                let text = line;
-                text = text.replace(/\*\*\*(.*?)\*\*\*/g, '$1');
-                text = text.replace(/\*\*(.*?)\*\*/g, '$1');
-                text = text.replace(/\*(.*?)\*/g, '$1');
-                
-                elements.push({
-                    type: 'text',
-                    text: text
-                });
-                currentElement = null;
-            }
-        });
-
-        return elements;
-    };
-
     // Paste presentation function
     const pastePresentation = () => {
         if (!pasteContent.trim()) {
@@ -534,11 +466,169 @@ slides: ${slides.length}
     };
 
     // PPTX Export function
+    const parseMarkdownForPptx = (content) => {
+        let processedContent = content;
+        
+        // Replace uploaded images with their data URLs
+        uploadedImages.forEach((dataUrl, imageId) => {
+            const regex = new RegExp(`!\\[([^\\]]*)\\]\\(${imageId}\\)`, 'g');
+            processedContent = processedContent.replace(regex, `![${imageId}](${dataUrl})`);
+        });
+
+        const lines = processedContent.split('\n');
+        const elements = [];
+        let currentList = null;
+
+        lines.forEach(line => {
+            const trimmedLine = line.trim();
+            if (!trimmedLine) return;
+
+            // Handle headers (remove # marks)
+            if (trimmedLine.startsWith('# ')) {
+                elements.push({
+                    type: 'title',
+                    text: trimmedLine.replace(/^#\s+/, ''),
+                    level: 1
+                });
+            } else if (trimmedLine.startsWith('## ')) {
+                elements.push({
+                    type: 'title',
+                    text: trimmedLine.replace(/^##\s+/, ''),
+                    level: 2
+                });
+            } else if (trimmedLine.startsWith('### ')) {
+                elements.push({
+                    type: 'title',
+                    text: trimmedLine.replace(/^###\s+/, ''),
+                    level: 3
+                });
+            } else if (trimmedLine.startsWith('#### ')) {
+                elements.push({
+                    type: 'title',
+                    text: trimmedLine.replace(/^####\s+/, ''),
+                    level: 4
+                });
+            }
+            // Handle bullet points
+            else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
+                if (!currentList || currentList.type !== 'bullet') {
+                    currentList = { type: 'bullet', items: [] };
+                    elements.push(currentList);
+                }
+                // Remove markdown syntax and parse inline formatting
+                const cleanText = cleanInlineFormatting(trimmedLine.replace(/^[*-]\s/, ''));
+                currentList.items.push(cleanText);
+            }
+            // Handle numbered lists
+            else if (trimmedLine.match(/^\d+\.\s/)) {
+                if (!currentList || currentList.type !== 'numbered') {
+                    currentList = { type: 'numbered', items: [] };
+                    elements.push(currentList);
+                }
+                const cleanText = cleanInlineFormatting(trimmedLine.replace(/^\d+\.\s/, ''));
+                currentList.items.push(cleanText);
+            }
+            // Handle images
+            else if (trimmedLine.match(/!\[.*?\]\(.*?\)/)) {
+                const match = trimmedLine.match(/!\[.*?\]\((.*?)\)/);
+                if (match) {
+                    elements.push({
+                        type: 'image',
+                        src: match[1]
+                    });
+                }
+                currentList = null;
+            }
+            // Handle blockquotes
+            else if (trimmedLine.startsWith('> ')) {
+                elements.push({
+                    type: 'quote',
+                    text: cleanInlineFormatting(trimmedLine.replace(/^>\s*/, ''))
+                });
+                currentList = null;
+            }
+            // Handle code blocks (ignore markdown code fence)
+            else if (!trimmedLine.startsWith('```') && !trimmedLine.startsWith('<div') && !trimmedLine.startsWith('</div>') && !trimmedLine.startsWith('<table') && !trimmedLine.startsWith('</table')) {
+                const cleanText = cleanInlineFormatting(trimmedLine);
+                if (cleanText) {
+                    elements.push({
+                        type: 'text',
+                        text: cleanText
+                    });
+                }
+                currentList = null;
+            } else {
+                currentList = null;
+            }
+        });
+
+        return elements;
+    };
+
+    // Helper function to clean inline markdown formatting
+    // Most reliable helper function to clean inline markdown formatting
+    const cleanInlineFormatting = (text) => {
+        let cleaned = text;
+        
+        // Remove HTML color spans but keep the text
+        cleaned = cleaned.replace(/<span style="color:\s*[^"]*">(.*?)<\/span>/g, '$1');
+        
+        // Process in order from most specific to least specific
+        
+        // 1. Remove bold-italic (*** or ___) - MUST be first
+        while (cleaned.match(/\*\*\*(.+?)\*\*\*/)) {
+            cleaned = cleaned.replace(/\*\*\*(.+?)\*\*\*/, '$1');
+        }
+        while (cleaned.match(/___(.+?)___/)) {
+            cleaned = cleaned.replace(/___(.+?)___/, '$1');
+        }
+        
+        // 2. Remove bold (** or __)
+        while (cleaned.match(/\*\*(.+?)\*\*]/)) {
+            cleaned = cleaned.replace(/\*\*(.+?)\*\*/, '$1');
+        }
+        while (cleaned.match(/__(.+?)__/)) {
+            cleaned = cleaned.replace(/__(.+?)__/, '$1');
+        }
+        
+        // 3. Remove italic (single * or _)
+        while (cleaned.match(/(?:^|[^*])\*([^*]+?)\*(?:[^*]|$)/)) {
+            cleaned = cleaned.replace(/\*([^*]+?)\*/, '$1');
+        }
+        while (cleaned.match(/(?:^|[^_])_([^_]+?)_(?:[^_]|$)/)) {
+            cleaned = cleaned.replace(/_([^_]+?)_/, '$1');
+        }
+        
+        // 4. Remove inline code marks (`)
+        while (cleaned.match(/`([^`]+?)`/)) {
+            cleaned = cleaned.replace(/`([^`]+?)`/, '$1');
+        }
+        
+        // 5. Remove strikethrough (~~)
+        while (cleaned.match(/~~(.+?)~~/)) {
+            cleaned = cleaned.replace(/~~(.+?)~~/, '$1');
+        }
+        
+        // 6. Remove links but keep link text [text](url)
+        while (cleaned.match(/\[([^\]]+)\]\([^\)]+\)/)) {
+            cleaned = cleaned.replace(/\[([^\]]+)\]\([^\)]+\)/, '$1');
+        }
+        
+        // 7. Remove images ![alt](url)
+        while (cleaned.match(/!\[([^\]]*)\]\([^\)]+\)/)) {
+            cleaned = cleaned.replace(/!\[([^\]]*)\]\([^\)]+\)/, '');
+        }
+        
+        return cleaned.trim();
+    };
+
+    // Enhanced PPTX Export function
     const exportToPPTX = async () => {
         setIsExporting(true);
         try {
             const pptx = new PptxGenJS();
             
+            // Define 16:9 layout
             pptx.defineLayout({ name: 'LAYOUT_16x9', width: 10, height: 5.625 });
             pptx.layout = 'LAYOUT_16x9';
 
@@ -549,40 +639,90 @@ slides: ${slides.length}
                 let yPosition = 0.5;
                 let hasTitle = false;
 
-                elements.forEach(element => {
+                elements.forEach((element, index) => {
                     switch (element.type) {
                         case 'title':
                             let fontSize = 44;
-                            if (element.level === 2) fontSize = 36;
-                            if (element.level === 3) fontSize = 28;
+                            let bold = true;
+                            let color = '1e293b';
+                            
+                            if (element.level === 1) {
+                                fontSize = 48;
+                                color = '1e293b';
+                            } else if (element.level === 2) {
+                                fontSize = 36;
+                                color = '374151';
+                            } else if (element.level === 3) {
+                                fontSize = 28;
+                                color = '475569';
+                            } else if (element.level === 4) {
+                                fontSize = 24;
+                                color = '64748b';
+                            }
                             
                             slide.addText(element.text, {
                                 x: 0.5,
                                 y: yPosition,
                                 w: 9,
-                                h: 0.8,
+                                h: 'auto',
                                 fontSize: fontSize,
-                                bold: true,
-                                color: element.level === 1 ? '1e293b' : '374151',
-                                fontFace: 'Arial'
+                                bold: bold,
+                                color: color,
+                                fontFace: 'Arial',
+                                align: element.level === 1 ? 'center' : 'left'
                             });
-                            yPosition += element.level === 1 ? 1.0 : 0.8;
+                            
+                            yPosition += element.level === 1 ? 1.2 : 0.9;
                             hasTitle = true;
                             break;
 
                         case 'bullet':
-                            const bulletText = element.items.map(item => `• ${item}`).join('\n');
-                            slide.addText(bulletText, {
-                                x: 0.5,
+                            // Create clean bullet list without markdown symbols
+                            slide.addText(element.items, {
+                                x: 0.8,
                                 y: yPosition,
-                                w: 9,
-                                h: Math.min(element.items.length * 0.4, 3),
+                                w: 8.4,
+                                h: 'auto',
                                 fontSize: 18,
                                 color: '374151',
                                 fontFace: 'Arial',
-                                lineSpacing: 32
+                                bullet: { type: 'bullet', characterCode: '2022' },
+                                lineSpacing: 28
                             });
-                            yPosition += Math.min(element.items.length * 0.4, 3) + 0.2;
+                            yPosition += Math.min(element.items.length * 0.5, 3.5) + 0.3;
+                            break;
+
+                        case 'numbered':
+                            // Create clean numbered list
+                            slide.addText(element.items, {
+                                x: 0.8,
+                                y: yPosition,
+                                w: 8.4,
+                                h: 'auto',
+                                fontSize: 18,
+                                color: '374151',
+                                fontFace: 'Arial',
+                                bullet: { type: 'number' },
+                                lineSpacing: 28
+                            });
+                            yPosition += Math.min(element.items.length * 0.5, 3.5) + 0.3;
+                            break;
+
+                        case 'quote':
+                            // Add blockquote with special styling
+                            slide.addText(element.text, {
+                                x: 1,
+                                y: yPosition,
+                                w: 8,
+                                h: 'auto',
+                                fontSize: 16,
+                                color: '475569',
+                                fontFace: 'Arial',
+                                italic: true,
+                                fill: { color: 'f0f9ff' },
+                                margin: 0.2
+                            });
+                            yPosition += 0.9;
                             break;
 
                         case 'text':
@@ -591,28 +731,29 @@ slides: ${slides.length}
                                     x: 0.5,
                                     y: yPosition,
                                     w: 9,
-                                    h: 0.6,
+                                    h: 'auto',
                                     fontSize: 16,
                                     color: '374151',
-                                    fontFace: 'Arial'
+                                    fontFace: 'Arial',
+                                    lineSpacing: 24
                                 });
-                                yPosition += 0.7;
+                                yPosition += 0.8;
                             }
                             break;
 
                         case 'image':
-                            if (element.src.startsWith('data:image')) {
+                            if (element.src.startsWith('data:image') || element.src.startsWith('http')) {
                                 try {
                                     const imageY = hasTitle ? 2.0 : 0.5;
                                     const availableHeight = 5.625 - imageY - 0.5;
                                     
                                     slide.addImage({
                                         data: element.src,
-                                        x: 1,
+                                        x: 2,
                                         y: imageY,
-                                        w: 4,
-                                        h: Math.min(3, availableHeight),
-                                        sizing: { type: 'contain', w: 4, h: Math.min(3, availableHeight) }
+                                        w: 6,
+                                        h: Math.min(3.5, availableHeight),
+                                        sizing: { type: 'contain', w: 6, h: Math.min(3.5, availableHeight) }
                                     });
                                 } catch (error) {
                                     console.warn('Failed to add image to slide:', error);
@@ -624,6 +765,7 @@ slides: ${slides.length}
             }
 
             await pptx.writeFile({ fileName: 'makedown-slides.pptx' });
+            alert('PPTX exported successfully! All markdown formatting has been removed for easier editing.');
             
         } catch (error) {
             console.error('Error creating PPTX:', error);
